@@ -13,7 +13,15 @@ namespace API.Context
         {
            
         }
-
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Position> Positions { get; set; }
+        public DbSet<Priority> Priorities { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<TicketHistory> TicketHistories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().HasOne(e => e.Account).WithOne(a => a.Employee).HasForeignKey<Account>(a => a.Email);
@@ -27,6 +35,8 @@ namespace API.Context
             //modelBuilder.Entity<Employee>().HasMany(e => e.TicketHistories).WithOne(th => th.Employee).HasForeignKey(th => th.Employee_email);
         }
 
-        public DbSet<Role> Roles { get; set; }
+       
+
+
     }
 }
