@@ -44,7 +44,7 @@ namespace API.Controllers
                     return BadRequest("Gagal melakukan Register");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 //return BadRequest(e);
                 return StatusCode(StatusCodes.Status500InternalServerError,

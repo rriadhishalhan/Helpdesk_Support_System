@@ -1,6 +1,8 @@
 ﻿using API.Base;
 using API.Models;
 using API.Repository.Data;
+using API.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,9 +15,24 @@ namespace API.Controllers
     [ApiController]
     public class TicketsController : BaseController<Ticket, TicketRepository, string>
     {
+        private readonly TicketRepository ticketRepository;
         public TicketsController(TicketRepository ticketRepository) : base(ticketRepository)
         {
+            this.ticketRepository = ticketRepository;
+        }
 
+        [HttpPost("createTicket")]
+        public ActionResult CreateTicket(CreateTicketVM createTicketVM)
+        {
+            try
+            {
+                int result = ticketRepository.CreateTicket(createTicketVM);
+
+                return Ok("Create Ticket Success");
+            } catch(Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Create Ticket Server Error");
+            }
         }
 
     }
