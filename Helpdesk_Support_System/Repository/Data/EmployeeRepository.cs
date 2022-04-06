@@ -3,6 +3,7 @@ using API.Models;
 using API.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,42 +18,68 @@ namespace API.Repository.Data
             this.myContext = myContext;
         }
 
-        //public int Register(RegisterEmployeeVM registerEmployeeVM)
-        //{
-        //    if (myContext.Employees.SingleOrDefault(e => e.Email == registerEmployeeVM.Email) != null)
-        //    {
-        //        return -1; //email already used
-        //    }
+        public ICollection MasterEmployee()
+        {
+            var data = myContext.Employees
+                .Join(myContext.Positions, e => e.Position_id, p => p.Id, (e, p) => new { e, p })
+                //.Join(myContext.TicketHistories, ep => ep.e.Id, th => th.Employee_Id, (ep, th) => new { ep, th })
+                .Select(d => new
+                {
+                    Id = d.e.Id,
+                    Position = d.p.Name,
+                    FullName = $"{d.e.First_name} {d.e.Last_name}",
+                    WorkLoad = d.e.Workload,
+                    Email = d.e.Email,
+                    PhoneNumber = d.e.Phone_number,
+                    //Ticket = d.th.Ticket_Id,
+                    //StatusTicket = d.th.Status.ToString(),
+                });
 
-        //    if (myContext.Employees.SingleOrDefault(e => e.Phone_number == registerEmployeeVM.Phone_number) != null)
-        //    {
-        //        return -2; //phone number already used
-        //    }
+            return data.ToList();
+        }
 
-        //    Employee newEmployee = new Employee
-        //    {
-        //        Email = registerEmployeeVM.Email,
-        //        First_name = registerEmployeeVM.First_name,
-        //        Last_name = registerEmployeeVM.Last_name,
-        //        Workload = registerEmployeeVM.Workload,
-        //        Phone_number = registerEmployeeVM.Phone_number,
-        //        Position_id = registerEmployeeVM.Position_id
-        //    };
-        //    myContext.Employees.Add(newEmployee);
+        public int Register(RegisterEmployeeVM registerEmployeeVM)
+        {
+            var empCount = myContext.Employees.ToList().Count;
+            var idFormat = "2200" + (empCount + 1).ToString();
+            var result = 0;
 
-        //    //myContext.SaveChanges();
+            if (empCount != 0)
+            {
+                var LastId = int.Parse(myContext.Employees.OrderBy(e => e.Id)
+                    .Select(e => e.Id).LastOrDefault().ToString());
+                idFormat = (LastId + 1).ToString();
+            }
 
-        //    Account newAccount = new Account
-        //    {
-        //        Email = newEmployee.Email,
-        //        Password = registerEmployeeVM.Password,
-        //        Role_id = 2
-        //    };
-        //    myContext.Accounts.Add(newAccount);
-        //    myContext.SaveChanges();
+            var emailEmployee = myContext.Employees.Where(e => e.Email == registerEmployeeVM.Email).FirstOrDefault();
 
-        //    return 1;
-        //}
+
+            if (emailEmployee != null)
+            {
+                result = -1;
+                return result;
+            }
+            else
+            {
+                Employee emp = new Employee
+                {
+                    Id = idFormat,
+                    First_name = registerEmployeeVM.First_name,
+                    Last_name = registerEmployeeVM.Last_name,
+                    Email = registerEmployeeVM.Email,
+                    Password = registerEmployeeVM.Password,
+                    Workload = 0,
+                    Phone_number = registerEmployeeVM.Phone_number,
+                    Position_id = registerEmployeeVM.Position_id,
+                };
+
+                myContext.Employees.Add(emp);
+
+                result = myContext.SaveChanges();
+            }
+            return result;
+
+        }
 
     }
 }

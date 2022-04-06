@@ -11,7 +11,6 @@ namespace API.ViewModel
         public string Password { get; set; }
         public string First_name { get; set; }
         public string Last_name { get; set; }
-        public int Workload { get; set; }
         public string Phone_number { get; set; }
         public int Position_id { get; set; }
     }

@@ -2,6 +2,7 @@
 using API.Models;
 using API.Repository.Data;
 using API.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -23,33 +24,55 @@ namespace API.Controllers
             this._configuration = configuration;
         }
 
+        [HttpGet("MasterEmployeeData")]
+        public ActionResult MasterEmployeeData()
+        {
+            try
+            {
+                var dataMaster = employeeRepository.MasterEmployee();
+                if (dataMaster.Count != 0)
+                {
+                    return Ok(dataMaster);
+                }
+                else
+                {
+                    return NotFound("Tidak ada Data Master");
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                   "MASTER DATA Server Error");
+            }
+        }
 
-        //[HttpPost("register")]
-        //public ActionResult Register(RegisterEmployeeVM registerEmployeeVM)
-        //{
-        //    try
-        //    {
-        //        int registerResult = employeeRepository.Register(registerEmployeeVM);
+        [HttpPost("register")]
+        public ActionResult Register(RegisterEmployeeVM registerEmployeeVM)
+        {
+            try
+            {
+                int registerResult = employeeRepository.Register(registerEmployeeVM);
 
-        //        if (registerResult == -1)
-        //        {
-        //            return BadRequest("Email already used");
-        //        }
-
-        //        if (registerResult == -2)
-        //        {
-        //            return BadRequest("Phone already used");
-        //        }
-
-        //        return Ok("Register success");
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e);
-        //        //return StatusCode(StatusCodes.Status500InternalServerError, "Registration Failed");
-
-        //    }
-        //}
+                if (registerResult > 0)
+                {
+                    return Ok("Akun berhasil ditambahkan");
+                }
+                else if (registerResult == -1)
+                {
+                    return BadRequest("Email sudah terdaftar");
+                }
+                else
+                {
+                    return BadRequest("Gagal melakukan Register");
+                }
+            }
+            catch (Exception)
+            {
+                //return BadRequest(e);
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "REGISTER Server Error");
+            }
+        }
 
 
     }
