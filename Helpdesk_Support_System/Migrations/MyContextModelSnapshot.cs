@@ -19,25 +19,6 @@ namespace API.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("API.Models.Account", b =>
-                {
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Role_id")
-                        .HasColumnType("int");
-
-                    b.HasKey("Email");
-
-                    b.HasIndex("Role_id");
-
-                    b.ToTable("tb_tr_accounts");
-                });
-
             modelBuilder.Entity("API.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -56,35 +37,51 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.Customer", b =>
                 {
-                    b.Property<string>("Email")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("First_name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Last_name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone_number")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Email");
+                    b.HasKey("Id");
 
                     b.ToTable("tb_m_customers");
                 });
 
             modelBuilder.Entity("API.Models.Employee", b =>
                 {
-                    b.Property<string>("Email")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("First_name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Last_name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Phone_number")
@@ -97,7 +94,7 @@ namespace API.Migrations
                     b.Property<int>("Workload")
                         .HasColumnType("int");
 
-                    b.HasKey("Email");
+                    b.HasKey("Id");
 
                     b.HasIndex("Position_id");
 
@@ -139,31 +136,15 @@ namespace API.Migrations
                     b.ToTable("tb_m_priorities");
                 });
 
-            modelBuilder.Entity("API.Models.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("tb_m_roles");
-                });
-
             modelBuilder.Entity("API.Models.Ticket", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Category_id")
+                    b.Property<int>("Category_Id")
                         .HasColumnType("int");
 
-                    b.Property<string>("Customer_email")
+                    b.Property<string>("Customer_Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Feedback")
@@ -173,7 +154,7 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Priority_id")
+                    b.Property<int>("Priority_Id")
                         .HasColumnType("int");
 
                     b.Property<string>("Solution")
@@ -181,11 +162,11 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Category_id");
+                    b.HasIndex("Category_Id");
 
-                    b.HasIndex("Customer_email");
+                    b.HasIndex("Customer_Id");
 
-                    b.HasIndex("Priority_id");
+                    b.HasIndex("Priority_Id");
 
                     b.ToTable("tb_m_tickets");
                 });
@@ -197,7 +178,7 @@ namespace API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Employee_email")
+                    b.Property<string>("Employee_Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("End_date")
@@ -209,43 +190,16 @@ namespace API.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("Ticket_id")
+                    b.Property<string>("Ticket_Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Employee_email");
+                    b.HasIndex("Employee_Id");
 
-                    b.HasIndex("Ticket_id");
+                    b.HasIndex("Ticket_Id");
 
                     b.ToTable("tb_tr_ticketHistory");
-                });
-
-            modelBuilder.Entity("API.Models.Account", b =>
-                {
-                    b.HasOne("API.Models.Customer", "Customer")
-                        .WithOne("Account")
-                        .HasForeignKey("API.Models.Account", "Email")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Models.Employee", "Employee")
-                        .WithOne("Account")
-                        .HasForeignKey("API.Models.Account", "Email")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("API.Models.Role", "Role")
-                        .WithMany("Accounts")
-                        .HasForeignKey("Role_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("API.Models.Employee", b =>
@@ -263,17 +217,17 @@ namespace API.Migrations
                 {
                     b.HasOne("API.Models.Category", "Category")
                         .WithMany("Tickets")
-                        .HasForeignKey("Category_id")
+                        .HasForeignKey("Category_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("API.Models.Customer", "Customer")
                         .WithMany("Tickets")
-                        .HasForeignKey("Customer_email");
+                        .HasForeignKey("Customer_Id");
 
                     b.HasOne("API.Models.Priority", "Priority")
                         .WithMany("Tickets")
-                        .HasForeignKey("Priority_id")
+                        .HasForeignKey("Priority_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -288,11 +242,11 @@ namespace API.Migrations
                 {
                     b.HasOne("API.Models.Employee", "Employee")
                         .WithMany("TicketHistories")
-                        .HasForeignKey("Employee_email");
+                        .HasForeignKey("Employee_Id");
 
                     b.HasOne("API.Models.Ticket", "Ticket")
                         .WithMany("TicketHistories")
-                        .HasForeignKey("Ticket_id");
+                        .HasForeignKey("Ticket_Id");
 
                     b.Navigation("Employee");
 
@@ -306,15 +260,11 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.Customer", b =>
                 {
-                    b.Navigation("Account");
-
                     b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("API.Models.Employee", b =>
                 {
-                    b.Navigation("Account");
-
                     b.Navigation("TicketHistories");
                 });
 
@@ -326,11 +276,6 @@ namespace API.Migrations
             modelBuilder.Entity("API.Models.Priority", b =>
                 {
                     b.Navigation("Tickets");
-                });
-
-            modelBuilder.Entity("API.Models.Role", b =>
-                {
-                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("API.Models.Ticket", b =>

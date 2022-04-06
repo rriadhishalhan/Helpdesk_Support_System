@@ -19,15 +19,15 @@ namespace API.Models
 
         //fk customer
         [ForeignKey("Customer")]
-        public string Customer_email { get; set; }
+        public string Customer_Id { get; set; }
         public Customer Customer { get; set; }
         //fk category
         [ForeignKey("Category")]
-        public int Category_id { get; set; }
+        public int Category_Id { get; set; }
         public Category Category { get; set; }
         //fk priority
         [ForeignKey("Priority")]
-        public int Priority_id { get; set; }
+        public int Priority_Id { get; set; }
         public Priority Priority { get; set; }
 
         public ICollection<TicketHistory> TicketHistories { get; set; }

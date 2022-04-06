@@ -6,7 +6,6 @@ E:\1SiKerja\MII\MCC\NET\codefile\Helpdesk_Support_System\Helpdesk_Support_System
 E:\1SiKerja\MII\MCC\NET\codefile\Helpdesk_Support_System\Helpdesk_Support_System\bin\Debug\netcoreapp3.1\API.runtimeconfig.dev.json
 E:\1SiKerja\MII\MCC\NET\codefile\Helpdesk_Support_System\Helpdesk_Support_System\bin\Debug\netcoreapp3.1\API.dll
 E:\1SiKerja\MII\MCC\NET\codefile\Helpdesk_Support_System\Helpdesk_Support_System\bin\Debug\netcoreapp3.1\API.pdb
-E:\1SiKerja\MII\MCC\NET\codefile\Helpdesk_Support_System\Helpdesk_Support_System\obj\Debug\netcoreapp3.1\API.csproj.AssemblyReference.cache
 E:\1SiKerja\MII\MCC\NET\codefile\Helpdesk_Support_System\Helpdesk_Support_System\obj\Debug\netcoreapp3.1\API.GeneratedMSBuildEditorConfig.editorconfig
 E:\1SiKerja\MII\MCC\NET\codefile\Helpdesk_Support_System\Helpdesk_Support_System\obj\Debug\netcoreapp3.1\API.AssemblyInfoInputs.cache
 E:\1SiKerja\MII\MCC\NET\codefile\Helpdesk_Support_System\Helpdesk_Support_System\obj\Debug\netcoreapp3.1\API.AssemblyInfo.cs

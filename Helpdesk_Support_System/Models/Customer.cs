@@ -11,15 +11,19 @@ namespace API.Models
     public class Customer
     {
         [Key]
-        public string Email { get; set; }
+        public string Id { get; set; }
         [Required]
         public string First_name { get; set; }
-
         public string Last_name { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string Password { get; set; }
+
         [Required]
         public string Phone_number { get; set; }
 
         public ICollection<Ticket> Tickets { get; set; }
-        public Account Account { get; set; }
     }
 }

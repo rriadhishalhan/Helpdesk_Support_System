@@ -29,10 +29,8 @@ namespace Helpdesk_Support_System
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddScoped<AccountRepository>();
             services.AddScoped<CategoryRepository>();
             services.AddScoped<EmployeeRepository>();
-            services.AddScoped<RoleRepository>();
             services.AddScoped<PositionRepository>();
             services.AddScoped<CustomerRepository>();
             services.AddScoped<PriorityRepository>();

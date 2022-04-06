@@ -20,7 +20,7 @@ namespace API.Models
 
         //fk ticket
         [ForeignKey("Ticket")]
-        public string Ticket_id { get; set; }
+        public string Ticket_Id { get; set; }
         public Ticket Ticket { get; set; }
 
         //fk employees position
@@ -28,7 +28,7 @@ namespace API.Models
         
         //fk employees email
         [ForeignKey("Employee")]
-        public string Employee_email { get; set; }
+        public string Employee_Id { get; set; }
         public Employee Employee { get; set; }
     }
 
