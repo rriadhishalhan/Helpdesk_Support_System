@@ -11,22 +11,20 @@ namespace API.Models
     public class Employee
     {
         [Key]
-        [Column(Order = 2)]
         public string Email { get; set; }
         [Required]
         public string First_name { get; set; }
-        [Required]
+
         public string Last_name { get; set; }
         [Required]
         public int Workload { get; set; }
-        [Required]
-        public string Speciality { get; set; }
+       
+
         [Required]
         public string Phone_number { get; set; }
 
         //fk position
         [ForeignKey("Position")]
-        [Column(Order = 1)]
         public int Position_id { get; set; }
         public Position Position { get; set; }
 

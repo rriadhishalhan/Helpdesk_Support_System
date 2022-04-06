@@ -8,19 +8,19 @@
     ".NETCoreApp,Version=v3.1": []
   },
   "packageFolders": {
-    "C:\\Users\\muham\\.nuget\\packages\\": {}
+    "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\muham\\source\\repos\\Helpdesk_Support_System\\Client\\Client.csproj",
+      "projectUniqueName": "E:\\1SiKerja\\MII\\MCC\\NET\\codefile\\Helpdesk_Support_System\\Client\\Client.csproj",
       "projectName": "Client",
-      "projectPath": "C:\\Users\\muham\\source\\repos\\Helpdesk_Support_System\\Client\\Client.csproj",
-      "packagesPath": "C:\\Users\\muham\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\muham\\source\\repos\\Helpdesk_Support_System\\Client\\obj\\",
+      "projectPath": "E:\\1SiKerja\\MII\\MCC\\NET\\codefile\\Helpdesk_Support_System\\Client\\Client.csproj",
+      "packagesPath": "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\",
+      "outputPath": "E:\\1SiKerja\\MII\\MCC\\NET\\codefile\\Helpdesk_Support_System\\Client\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\muham\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Rezky Riadhi Shalhan\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -63,7 +63,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
       }
     }
   }

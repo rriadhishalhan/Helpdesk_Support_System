@@ -73,3 +73,4 @@ C:\Users\muham\source\repos\Helpdesk_Support_System\Client\obj\Debug\netcoreapp3
 C:\Users\muham\source\repos\Helpdesk_Support_System\Client\obj\Debug\netcoreapp3.1\Client.pdb
 C:\Users\muham\source\repos\Helpdesk_Support_System\Client\obj\Debug\netcoreapp3.1\Client.genruntimeconfig.cache
 C:\Users\muham\source\repos\Helpdesk_Support_System\Client\obj\Debug\netcoreapp3.1\Client.csproj.CopyComplete
+E:\1SiKerja\MII\MCC\NET\codefile\Helpdesk_Support_System\Client\obj\Debug\netcoreapp3.1\Client.csproj.AssemblyReference.cache
