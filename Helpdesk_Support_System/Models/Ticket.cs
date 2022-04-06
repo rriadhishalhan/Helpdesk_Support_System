@@ -27,7 +27,7 @@ namespace API.Models
         public Category Category { get; set; }
         //fk priority
         [ForeignKey("Priority")]
-        public int Priority_Id { get; set; }
+        public int? Priority_Id { get; set; }
         public Priority Priority { get; set; }
 
         public ICollection<TicketHistory> TicketHistories { get; set; }
