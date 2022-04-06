@@ -1,5 +1,6 @@
-/Client/bin/
-/Client/obj/
-/Helpdesk_Support_System/bin/
-/Helpdesk_Support_System/obj/
-/.vs/
+#Ignored Folder
+Client/bin/
+Client/obj/
+Helpdesk_Support_System/bin/
+Helpdesk_Support_System/obj/
+.vs/
