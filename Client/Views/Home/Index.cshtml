@@ -6,18 +6,31 @@
     Layout = "_LayoutLogin";
 }
 
-<div class="container-fluid p-0" >
-    <div class="row m-0">
-        <div class="col-12 p-0">
-            <div class="login-card" >
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-7">
+            <div class="center">
+                <div class="text">
+                    <span style="font-size:45px">Keluhan anda membuat<br /> kami </span>
+                    <span class="type" style="font-size: 45px;font-weight:800"></span>
+                </div>
+            </div>
+
+            <img class="bg-img-cover bg-center" src="../assets/images/login/login_bg.jpg" alt="looginpage">
+        </div>
+        <div class="col-xl-5 p-0">
+            <div class="login-card">
+
                 <div>
-                    <div class="login-main"id="cardLogin">
-                        <form class="theme-form" >
+
+
+                    <div class="login-main" id="cardLogin">
+                        <form class="theme-form">
                             <center>
                                 <h2>👋 Welcome 👋</h2>
                                 <p>Please login to start your session</p>
                             </center>
-                            
+
                             <div class="form-group">
                                 <label class="col-form-label">Email Address</label>
                                 <input class="form-control" type="email" required="" placeholder="yourEmail@domain.com">
@@ -33,12 +46,13 @@
                                 <div class="checkbox p-0">
                                     <input id="checkbox1" type="checkbox">
                                     <label class="text-muted" for="checkbox1">Remember password</label>
-                                </div><a class="link" href="forget-password.html">Forgot password?</a>
+                                </div>
+                                @*<a class="link" href="forget-password.html">Forgot password?</a>*@
                                 <div class="text-end mt-3">
                                     <button class="btn btn-primary btn-block w-100" type="submit">Log in</button>
                                 </div>
                             </div>
-                            
+
                             <p class="mt-4 mb-0 text-center">Don't have account?<a class="ms-2" href="sign-up.html">Create Account</a></p>
                         </form>
                     </div>
@@ -47,3 +61,36 @@
         </div>
     </div>
 </div>
+
+<!--typed.js -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.8/typed.min.js"></script>
+
+<script>
+    new Typed('.type', {
+        strings: ["Belajar", "Berkembang", "Bangkit", "Lebih Baik"],
+        stringsElement: null,
+        // typing speed
+        typeSpeed: 50,
+        // time before typing starts
+        startDelay: 600,
+        // backspacing speed
+        backSpeed: 40,
+        // time before backspacing
+        backDelay: 500,
+        // loop
+        loop: true,
+        // false = infinite
+        loopCount: 3,
+        // show cursor
+        showCursor: false,
+        // character for cursor
+        cursorChar: "|",
+        // attribute to type (null == text)
+        attr: null,
+        // either html or text
+        contentType: 'html',
+    });
+</script>
+
+<!--typed.js -->

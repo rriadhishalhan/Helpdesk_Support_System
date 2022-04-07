@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "8ItsL/FZoYWnIaH55n1BS3uq9I/NO7y1UjyeMV/REdaCwPCaqN8efvq4/d/TKLZo7fjnbm04Tk6joRQ1SU/7zQ==",
+  "dgSpecHash": "325MlB5NZw+bmEBzSZKsY2EO5xC5MsyFHe+WhdlgEKNeXcgU2embzaysFoZyjKH9DPS+6uDlBaJELdLLGNfQtw==",
   "success": true,
   "projectFilePath": "E:\\1SiKerja\\MII\\MCC\\NET\\codefile\\Helpdesk_Support_System\\Helpdesk_Support_System\\API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\3.1.8\\microsoft.aspnetcore.authentication.jwtbearer.3.1.8.nupkg.sha512",
     "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\microsoft.data.sqlclient\\2.0.1\\microsoft.data.sqlclient.2.0.1.nupkg.sha512",
     "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\2.0.1\\microsoft.data.sqlclient.sni.runtime.2.0.1.nupkg.sha512",

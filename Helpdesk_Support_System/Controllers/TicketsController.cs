@@ -35,5 +35,28 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("MasterTicket")]
+        public ActionResult MasterTicket()
+        {
+            
+            try
+            {
+                var dataMaster = ticketRepository.MasterTicket();
+                if (dataMaster.Count != 0)
+                {
+                    return Ok(dataMaster);
+                }
+                else
+                {
+                    return NotFound("Tidak ada data master Ticket");
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                  "MASTER DATA TICKET Server Error");
+            }
+        }
+
     }
 }

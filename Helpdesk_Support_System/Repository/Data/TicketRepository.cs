@@ -2,6 +2,7 @@
 using API.Models;
 using API.ViewModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,6 +47,24 @@ namespace API.Repository.Data
 
             return 1;
 
+        }
+        public ICollection MasterTicket()
+        {
+            var data = myContext.Tickets
+                .Join(myContext.Categories, t => t.Category_Id, c => c.Id, (t, c) => new { t, c })
+                .Join(myContext.Priorities, tc => tc.t.Priority_Id, p => p.Id, (tc, p) => new { tc, p })
+                .Select(d => new
+                {
+                    id = d.tc.t.Id,
+                    priority = d.p.Name,
+                    category = d.tc.c.Name,
+                    issue = d.tc.t.Issue,
+                    solution = d.tc.t.Solution,
+                    feedback = d.tc.t.Feedback,
+
+                });
+
+            return data.ToList();
         }
     }
 }

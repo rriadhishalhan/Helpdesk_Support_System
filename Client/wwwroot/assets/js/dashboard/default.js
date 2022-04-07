@@ -12,18 +12,22 @@ if (curHr >= 0 && curHr < 4) {
     document.getElementById("greeting").innerHTML = 'Good Evening';
 }
 // time 
+const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 function startTime() {
     var today = new Date();
     var h = today.getHours();
     var m = today.getMinutes();
     // var s = today.getSeconds();
+        var dayNow = today.getDate();
+        var monthNow = month[ today.getMonth()];
+        var yearNow = today.getFullYear()
     var ampm = h >= 12 ? 'PM' : 'AM';
     h = h % 12;
     h = h ? h : 12;
     m = checkTime(m);
     // s = checkTime(s);
     document.getElementById('txt').innerHTML =
-        h + ":" + m + ' ' + ampm;
+        dayNow + " " + monthNow + " " + yearNow + " // "+ h + ":" + m + ' ' + ampm;
     var t = setTimeout(startTime, 500);
 }
 function checkTime(i) {
