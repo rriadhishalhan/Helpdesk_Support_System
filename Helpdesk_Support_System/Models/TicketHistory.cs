@@ -16,7 +16,6 @@ namespace API.Models
         public Status Status { get; set; }
         [Required]
         public DateTime Start_date { get; set; }
-        public DateTime End_date { get; set; }
 
         //fk ticket
         [ForeignKey("Ticket")]
@@ -34,8 +33,8 @@ namespace API.Models
 
     public enum Status {
         Terkirim,
-        Dibuka,
         Diteruskan,
+        Dibuka,        
         Terjawab,
         Ditutup
     }
