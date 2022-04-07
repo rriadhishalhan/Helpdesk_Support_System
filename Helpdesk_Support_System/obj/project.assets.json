@@ -5870,19 +5870,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\": {}
+    "C:\\Users\\muham\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\1SiKerja\\MII\\MCC\\NET\\codefile\\Helpdesk_Support_System\\Helpdesk_Support_System\\API.csproj",
+      "projectUniqueName": "C:\\Users\\muham\\source\\repos\\Helpdesk_Support_System\\Helpdesk_Support_System\\API.csproj",
       "projectName": "API",
-      "projectPath": "E:\\1SiKerja\\MII\\MCC\\NET\\codefile\\Helpdesk_Support_System\\Helpdesk_Support_System\\API.csproj",
-      "packagesPath": "C:\\Users\\Rezky Riadhi Shalhan\\.nuget\\packages\\",
-      "outputPath": "E:\\1SiKerja\\MII\\MCC\\NET\\codefile\\Helpdesk_Support_System\\Helpdesk_Support_System\\obj\\",
+      "projectPath": "C:\\Users\\muham\\source\\repos\\Helpdesk_Support_System\\Helpdesk_Support_System\\API.csproj",
+      "packagesPath": "C:\\Users\\muham\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\muham\\source\\repos\\Helpdesk_Support_System\\Helpdesk_Support_System\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Rezky Riadhi Shalhan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\muham\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5949,7 +5949,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.405\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.406\\RuntimeIdentifierGraph.json"
       }
     }
   }
