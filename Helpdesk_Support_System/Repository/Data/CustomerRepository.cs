@@ -39,6 +39,9 @@ namespace API.Repository.Data
             }
             else
             {
+                string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+                string encryptedPassword = BCrypt.Net.BCrypt.HashPassword(registerCustomerVM.Password, salt);
+
                 Customer cust = new Customer
                 {
                     Id = idFormat,
@@ -46,7 +49,7 @@ namespace API.Repository.Data
                     Last_name = registerCustomerVM.last_name,
                     Phone_number = registerCustomerVM.phone_number,
                     Email = registerCustomerVM.Email,
-                    Password = registerCustomerVM.Password,
+                    Password = encryptedPassword,
                 };
 
                 myContext.Customers.Add(cust);
@@ -55,6 +58,23 @@ namespace API.Repository.Data
             }
 
             return result;
+        }
+
+        public int Login(LoginVM loginVM)
+        {
+            var customerData = myContext.Customers.Where(c => c.Email == loginVM.Email).FirstOrDefault();
+            if (customerData == null)
+            {
+                return -1;
+            }
+
+            var isPasswordCorrect = BCrypt.Net.BCrypt.Verify(loginVM.Password, customerData.Password);
+            if (!isPasswordCorrect)
+            {
+                return -2;
+            }
+
+            return 0;
         }
 
     }

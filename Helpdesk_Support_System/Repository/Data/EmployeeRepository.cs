@@ -61,13 +61,16 @@ namespace API.Repository.Data
             }
             else
             {
+                string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+                string encryptedPassword = BCrypt.Net.BCrypt.HashPassword(registerEmployeeVM.Password, salt);
+
                 Employee emp = new Employee
                 {
                     Id = idFormat,
                     First_name = registerEmployeeVM.First_name,
                     Last_name = registerEmployeeVM.Last_name,
                     Email = registerEmployeeVM.Email,
-                    Password = registerEmployeeVM.Password,
+                    Password = encryptedPassword,
                     Workload = 0,
                     Phone_number = registerEmployeeVM.Phone_number,
                     Position_id = registerEmployeeVM.Position_id,
@@ -81,5 +84,44 @@ namespace API.Repository.Data
 
         }
 
+        public int Login(LoginVM loginVM)
+        {
+            var employeeData = myContext.Employees.Where(c => c.Email == loginVM.Email).FirstOrDefault();
+            if (employeeData == null)
+            {
+                return -1;
+            }
+
+            var isPasswordCorrect = BCrypt.Net.BCrypt.Verify(loginVM.Password, employeeData.Password);
+            if (!isPasswordCorrect)
+            {
+                return -2;
+            }
+
+            return 0;
+        }
+
+        public string GetEmployeeRoleName(string employeeEmail)
+        {
+            string roleName = (from e in myContext.Employees
+                               join p in myContext.Positions on e.Position_id equals p.Id
+                               where e.Email == employeeEmail
+                               select p.Name).FirstOrDefault();
+            return roleName;
+        }
+
+        public string GetEmployeeFullName(string employeeEmail)
+        {
+            Employee emp = myContext.Employees.Where(e => e.Email == employeeEmail).FirstOrDefault();
+
+            //jika last_namenya kosong, maka hanya kembalikan first_name
+            if (emp.Last_name.Equals(""))
+            {
+                return emp.First_name;
+            }
+
+            //jika memiliki last_name, maka concat dengan first_name
+            return emp.First_name + " " + emp.Last_name;
+        }
     }
 }
