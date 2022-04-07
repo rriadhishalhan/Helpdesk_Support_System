@@ -40,7 +40,7 @@ namespace API.Repository.Data
                 Ticket_Id = ticketId,
                 Status = Status.Terkirim,
                 Start_date = now,
-                Employee_Id = "22001"
+                //Employee_Id = "22001"
             });
             myContext.SaveChanges();
 
