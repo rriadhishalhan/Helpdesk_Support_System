@@ -77,5 +77,29 @@ namespace API.Repository.Data
             return 0;
         }
 
+        public string GetCustomerFullName(string CustomerEmail)
+        {
+            Customer cust = myContext.Customers.Where(c => c.Email == CustomerEmail).FirstOrDefault();
+
+            //jika last_namenya kosong, maka hanya kembalikan first_name
+            if (cust.Last_name.Equals(""))
+            {
+                return cust.First_name;
+            }
+
+            //jika memiliki last_name, maka concat dengan first_name
+            return cust.First_name + " " + cust.Last_name;
+        }
+
+        public string GetCustomerId(string CustomerEmail)
+        {
+            Customer cust = myContext.Customers.Where(c => c.Email == CustomerEmail).FirstOrDefault();
+
+           
+
+            //jika memiliki last_name, maka concat dengan first_name
+            return cust.Id;
+        }
+
     }
 }

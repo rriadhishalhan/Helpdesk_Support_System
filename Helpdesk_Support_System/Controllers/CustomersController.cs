@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,17 +66,24 @@ namespace API.Controllers
 
                 if (loginResult == -1)
                 {
-                    return BadRequest("Email is not exist");
+                    //return BadRequest("Email is not exist");
+                    return NotFound(new { status = HttpStatusCode.NotFound, token = (object)null, message = "Email is not exist" });
                 }
 
                 if (loginResult == -2)
                 {
-                    return BadRequest("Password is incorrect");
+                    //return BadRequest("Password is incorrect");
+                    return NotFound(new { status = HttpStatusCode.NotFound, token = (object)null, message = "Password is incorrect" });
                 }
+
+                string customerId = customerRepository.GetCustomerId(loginVM.Email);
+                string customerFullName = customerRepository.GetCustomerFullName(loginVM.Email);
 
                 var claims = new List<Claim>
                 {
                     new Claim("Email", loginVM.Email),
+                    new Claim("Id",customerId),
+                    new Claim("Name", customerFullName),
                     new Claim("roles", "Customer")
                 };
 
