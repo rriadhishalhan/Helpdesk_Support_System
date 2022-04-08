@@ -98,5 +98,35 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("{customerId}/tickets")]
+        public ActionResult CustomerTickets(string customerId)
+        {
+            try
+            {
+                var result = customerRepository.CustomerTickets(customerId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "CUSTOMER TICKETS Server Error");
+            }
+        }
+
+        [HttpGet("{customerId}/tickets/{ticketId}/history")]
+        public ActionResult CustomerTicketHistory(string customerId, string ticketId)
+        {
+            try
+            {
+                var result = customerRepository.CustomerTicketHistory(customerId, ticketId);
+
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "CUSTOMER TICKET HISTORY Server Error");
+            }
+        }
     }
 }
