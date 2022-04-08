@@ -1,48 +1,26 @@
 ﻿
-function addEmployee() {
+function addTicket() {
     let obj = new Object();
 
-    obj.FirstName = $("#FirstName").val();
-    obj.LastName = $("#LastName").val();
-    obj.PhoneNumber = $("#PhoneNumber").val();
+    obj.Customer_id = objSession.Id.toString();
 
-    var listGender = document.getElementsByName('genderRadio');
-    for (var i = 0; i < listGender.length; i++) {
-        if (listGender[i].checked) {
-            obj.gender = parseInt(listGender[i].value);
-            break;
-        }
-    }
-    obj.BirthDate = $("#DateOfBirth").val();
-    obj.Salary = Number($("#Salary").val());
-    obj.Email = $("#email").val();
-    obj.Password = $("#password").val();
-    obj.universityId = Number($("#inputUniversities").val());
-    obj.Degree = $("#Degree").val();
-    obj.GPA = $("#Gpa").val();
-    obj.RoleId = Number($("#inputRole").val());
+    obj.Issue = $("#inputIssue").val();
+
+    obj.Category_id = Number($("#inputCategories").val());
 
     console.log(obj);
 
-    $("#formInsertDataEmployee").validate({
+    $("#formInsertTicket").validate({
         rules: {
-            email: {
+
+            Categories: {
                 required: true,
-                email: true,
             },
-            password: {
+            Issue: {
                 required: true,
             },
         },
-        messages: {
-            email: {
-                required: "Please enter a email address",
-                email: "Please enter a valid email address"
-            },
-            password: {
-                required: "Please provide a password",
-            }
-        },
+
         errorElement: 'span',
         errorPlacement: function (error, element) {
             error.addClass('invalid-feedback');
@@ -55,14 +33,14 @@ function addEmployee() {
             $(element).removeClass('is-invalid');
         }
     });
-    if ($("#formInsertDataEmployee").valid()) {
+    if ($("#formInsertTicket").valid() && obj.Category_id.isNaN) {
         $.ajax({
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             type: "POST",
-            url: "https://localhost:44368/employees/Register/",
+            url: "https://localhost:44376/API/Tickets/createTicket",
             dataType: "json",
             data: JSON.stringify(obj)
         }).done((result) => {
@@ -227,6 +205,8 @@ function deleteEmployee(nik) {
 
 }
 
+
+//GET SESSION DATA FROM HTML//
 let objSession = new Object();
 objSession.Id = $("#hdnSessionId").data('value');
 objSession.Name = $("#hdnSessionName").data('value');
@@ -247,7 +227,7 @@ $(document).ready(function () {
         var textTicket = ``;
         if (result.length != 0) {
             $.each(result, function (key, val) {
-                textTicket += `<tr data-bs-toggle="modal" data-bs-target="#exampleModalCenter">`;
+                textTicket += `<tr data-bs-toggle="modal" data-bs-target="#ModalInputTiket">`;
                 textTicket += `<th scope="row">${key + 1}</th>`;
                 textTicket += `<td>${result[key].ticket_Id}</td>`;
                 textTicket += `<td>${result[key].category}</td>`;
@@ -268,6 +248,25 @@ $(document).ready(function () {
     }).fail((err) => {
         console.log(err);
     });
+
+    //BUAT SELECT OPTION CATEGORIES
+    $.ajax({
+        type: "GET",
+        url: "https://localhost:44376/API/Categories",
+        data: {}
+    }).done((result) => {
+        var textRoles = `<option value="hide" style="display: none;">Pick Categories</option>`;
+        $.each(result, function (key, val) {
+
+            textRoles += `<option value="${result[key].id}">${result[key].name}</option>`;
+        });
+        $('#inputCategories').html(textRoles);
+    }).fail((err) => {
+        console.log(err);
+    });
+
+
+
 })
 //$(document).ready(function () {
 //    //BUAT SELECT OPTION ROLE
