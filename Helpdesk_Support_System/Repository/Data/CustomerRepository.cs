@@ -77,6 +77,45 @@ namespace API.Repository.Data
             return 0;
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public string GetCustomerFullName(string CustomerEmail)
         {
             Customer cust = myContext.Customers.Where(c => c.Email == CustomerEmail).FirstOrDefault();
