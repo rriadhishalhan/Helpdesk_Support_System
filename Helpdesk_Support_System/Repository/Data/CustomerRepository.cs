@@ -17,6 +17,7 @@ namespace API.Repository.Data
         {
             this.myContext = myContext;
         }
+
         public int RegisterCustomer(RegisterCustomerVM registerCustomerVM)
         {
             var custCount = myContext.Customers.ToList().Count;
