@@ -33,7 +33,8 @@ function addTicket() {
             $(element).removeClass('is-invalid');
         }
     });
-    if ($("#formInsertTicket").valid() && obj.Category_id.isNaN) {
+    if ($("#formInsertTicket").valid() && !Number.isNaN(obj.Category_id)) {
+
         $.ajax({
             headers: {
                 'Accept': 'application/json',
