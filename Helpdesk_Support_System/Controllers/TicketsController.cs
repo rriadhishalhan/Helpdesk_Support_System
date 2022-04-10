@@ -58,5 +58,153 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("MasterTicket/{status}")]
+        public ActionResult MasterTicket(string status)
+        {
+
+            try
+            {
+                var dataMaster = ticketRepository.MasterTicket(status);
+                if (dataMaster.Count != 0)
+                {
+                    return Ok(dataMaster);
+                }
+                else
+                {
+                    return NotFound("Tidak ada data master Ticket");
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                  "MASTER DATA TICKET Server Error");
+            }
+        }
+
+        [HttpPost("setPriority")]
+        public ActionResult SetPriority(SetPriorityVM setPriorityVM)
+        {
+            try
+            {
+                int result = ticketRepository.SetPriority(setPriorityVM);
+
+                if (result == -1)
+                {
+                    return NotFound("Ticket not Found");
+                }
+
+                if (result == -2)
+                {
+                    return NotFound("Priority not Found");
+                }
+
+                if (result == 0)
+                {
+                    return BadRequest("Set Priority Ticket Failed");
+                }
+
+                return Ok("Set Priority Ticket Success");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                  "SET PRIORITY TICKET Server Error");
+            }
+        }
+
+        [HttpPost("forward")]
+        public ActionResult Forward(ForwardTicketVM forwardTicketVM)
+        {
+            try
+            {
+                int result = ticketRepository.Forward(forwardTicketVM);
+
+                if (result == -1)
+                {
+                    return NotFound("Ticket not Found");
+                }
+
+                if (result == -2)
+                {
+                    return NotFound("Employee not Found");
+                }
+
+                if (result == 0)
+                {
+                    return BadRequest("Forward Ticket Failed");
+                }
+
+                return Ok("Forward Ticket Success");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                  "FORWARD TICKET Server Error");
+            }
+        }
+
+        [HttpPost("open")]
+        public ActionResult Open(OpenTicketVM openTicketVM)
+        {
+            try
+            {
+                int result = ticketRepository.Open(openTicketVM);
+
+                if (result == -1)
+                {
+                    return NotFound("Ticket not Found");
+                }
+
+                if (result == -2)
+                {
+                    return NotFound("Employee not Found");
+                }
+
+                if (result == 0)
+                {
+                    return BadRequest("Open Ticket Failed");
+                }
+
+                return Ok("Open Ticket Success");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                  "OPEN TICKET Server Error");
+            }
+        }
+
+        [HttpPost("respond")]
+        public ActionResult Respond(RespondTicketVM respondTicketVM)
+        {
+            try
+            {
+                int result = ticketRepository.Respond(respondTicketVM);
+
+                if (result == -1)
+                {
+                    return NotFound("Ticket not Found");
+                }
+
+                if (result == -2)
+                {
+                    return NotFound("Employee not Found");
+                }
+
+                if (result == -3)
+                {
+                    return BadRequest("Solution cant be null");
+                }
+
+                return Ok("Respond Ticket Success");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                  "RESPOND TICKET Server Error");
+            }
+        }
+
+
     }
 }

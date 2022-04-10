@@ -101,15 +101,18 @@ namespace API.Repository.Data
             var customerTicketHistory = (from c in myContext.Customers
                                          join t in myContext.Tickets on c.Id equals t.Customer_Id
                                          join th in myContext.TicketHistories on t.Id equals th.Ticket_Id
-                                         join e in myContext.Employees on th.Employee_Id equals e.Id
-                                         join p in myContext.Positions on e.Position_id equals p.Id
+                                         join e in myContext.Employees on th.Employee_Id equals e.Id into temp
+                                         from e in temp.DefaultIfEmpty()
+                                         join post in myContext.Positions on e.Position_id equals post.Id into temp2
+                                         from post in temp2.DefaultIfEmpty()
                                          where t.Customer_Id == customerId && th.Ticket_Id == ticketId
                                          orderby th.Start_date ascending
                                          select new
                                          {
                                              Date = th.Start_date.ToString("dddd, dd MMMM yyyy HH:mm:ss"),
                                              Status = th.Status.ToString(),
-                                             Employee_name = $"{e.First_name} {e.Last_name} ({p.Name})"
+                                             Employee_name = e == null ? null : $"{e.First_name} {e.Last_name}",
+                                             Employee_position = e == null ? null : post.Name
                                          }).ToList();
             return customerTicketHistory;
         }
