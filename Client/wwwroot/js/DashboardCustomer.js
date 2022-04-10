@@ -79,10 +79,13 @@ function detailTicket(id, ticketId) {
     }).done((result) => {
         $('#customerTikcetId').html('<h4 style="font-weight:bolder; line-height: 35px;">' + ticketId + '</h4>');
 
-        var currentIndex = 0;
+        var currentIndex = 1;
         var textTicketHistories = ``;
         $.each(result, function (key, val) {
-            if (currentIndex = key) {
+            console.log(key);
+            console.log(currentIndex);
+
+            if (currentIndex == result.length) {
                 if (result[key].employee_position == null) {
                     textTicketHistories += `<tr>`;
                     textTicketHistories += `<td>${result[key].date}</td>`;
@@ -117,7 +120,7 @@ function detailTicket(id, ticketId) {
             }
             
 
-            currentIndex += key;
+            currentIndex += 1;
 
             console.log(textTicketHistories);
         });
