@@ -35,7 +35,7 @@
                                         </div>
 
                                         <h4 class="f-w-600">
-                                            
+
                                             <span id="greeting" style="font-weight:lighter">Good Morning</span>, <span style="font-weight:bolder"> @HttpContextAccessor.HttpContext.Session.GetString("Name")</span>
                                         </h4>
                                         <br />
@@ -79,7 +79,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="ticketTableCustomer" style="text-align:center">
-                                        <tr >
+                                        <tr>
                                             <td colspan="4"> Belum ada tiket </td>
                                         </tr>
 
@@ -90,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            
+
 
 
         </div>
@@ -119,9 +119,6 @@
                                     <div>
 
                                         <select name="Categories" class="form-control " id="inputCategories" required>
-
-                                           
-
                                         </select>
 
                                     </div>
@@ -167,23 +164,88 @@
                         </div>
                     </div>
                 </div>
-                
+
             </center>
 
             @*<div class="modal-footer">
-                <center>
-                    <div>
-                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="button">Save changes</button>
-                    </div>
+                    <center>
+                        <div>
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" type="button">Save changes</button>
+                        </div>
 
-                </center>
+                    </center>
 
-            </div>*@
+                </div>*@
 
         </div>
     </div>
 </div>
+
+<!--/////////////////////////////////// MODAL CEK TIKET HISTORIES /////////////////////////////////////////////////////////////////////-->
+<div class="modal fade" id="ModalTicketHistories" tabindex="-1" role="dialog" aria-labelledby="RiwayatTiket" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h4 class="modal-title">Lacak Tiketmu</h4>*@
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <center>
+                    <span>
+                        Dengan Nomor Tiket
+                    </span>
+                    <div id="customerTikcetId">
+
+                    </div>
+
+                </center>
+                <div class="table-responsive" style="padding-top:5%">
+                    <table class="table table-bordernone">
+                        <thead style="text-align:center">
+                            <tr>
+                                @*<th scope="col">#</th>*@
+                                <th scope="col">Tanggal</th>
+                                <th scope="col"></th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketHistoriesTableCustomer" style="text-align:center">
+
+                            <tr>
+                                @*<th class="border-bottom-0" scope="row">1</th>*@
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>mdo</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+
+            
+
+
+            <div class="modal-footer">
+                        <div>
+                            <center>
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+
+                            </center>
+                            @*<button class="btn btn-primary" type="button">Save changes</button>*@
+                        </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <script>
 

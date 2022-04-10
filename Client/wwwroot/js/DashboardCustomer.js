@@ -67,22 +67,62 @@ function addTicket() {
     
 }
 
-function detailEmployee(nik) {
+function detailTicket(id, ticketId) {
+    //console.log(ticketId)
+    let textUrlDetail = "https://localhost:44376/API/Customers/" + id + "/tickets/" + ticketId +"/history";
+    //console.log(textUrlDetail);
+
     $.ajax({
         type: "GET",
-        url: "https://localhost:44300/api/employees/MasterEmployeeData/"+nik,
+        url: textUrlDetail,
         data: {}
     }).done((result) => {
-        $('#employeeNIK').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].nik + '</h4>');
-        $('#employeeName').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].fullName + '</h4>');
-        $('#employeeRole').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].role + '</h4>');
-        $('#employeeEmail').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].email + '</h4>');
-        $('#employeeGender').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].gender + '</h4>');
-        $('#employeePhone').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].phone + '</h4>');
-        $('#employeeSalary').html('<h4 style="font-weight:bolder; line-height: 35px;"> $' + result[0].salary + '</h4>');
-        $('#employeeUniversities').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].universityName + '</h4>');
-        $('#employeeDegree').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].degree + '</h4>');
-        $('#employeeGpa').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].gpa + '</h4>');
+        $('#customerTikcetId').html('<h4 style="font-weight:bolder; line-height: 35px;">' + ticketId + '</h4>');
+
+        var currentIndex = 0;
+        var textTicketHistories = ``;
+        $.each(result, function (key, val) {
+            if (currentIndex = key) {
+                if (result[key].employee_position == null) {
+                    textTicketHistories += `<tr>`;
+                    textTicketHistories += `<td>${result[key].date}</td>`;
+                    textTicketHistories += `<td><i class="fa fa-circle" style="color:#16ba0d"></i> </td>`;
+                    textTicketHistories += `<td>${result[key].status}</td>`;
+                    textTicketHistories += `</tr>`;
+                }
+                else {
+                    textTicketHistories += `<tr>`;
+                    textTicketHistories += `<td>${result[key].date}</td>`;
+                    textTicketHistories += `<td><i class="fa fa-circle" style="color:#16ba0d"></i> </td>`;
+                    textTicketHistories += `<td>${result[key].status} (${result[key].employee_position})</td>`;
+                    textTicketHistories += `</tr>`;
+                }
+            }
+            else {
+                if (result[key].employee_position == null) {
+                    textTicketHistories += `<tr>`;
+                    textTicketHistories += `<td>${result[key].date}</td>`;
+                    textTicketHistories += `<td><i class="fa fa-circle" ></i> </td>`;
+                    textTicketHistories += `<td>${result[key].status} </td>`;
+                    textTicketHistories += `</tr>`;
+                }
+                else {
+                    textTicketHistories += `<tr>`;
+                    textTicketHistories += `<td>${result[key].date}</td>`;
+                    textTicketHistories += `<td><i class="fa fa-circle" ></i> </td>`;
+                    textTicketHistories += `<td>${result[key].status} (${result[key].employee_position})</td>`;
+                    textTicketHistories += `</tr>`;
+                }
+                
+            }
+            
+
+            currentIndex += key;
+
+            console.log(textTicketHistories);
+        });
+        $('#ticketHistoriesTableCustomer').html(textTicketHistories);
+
     }).fail((err) => {
         console.log(err);
     });
@@ -227,7 +267,7 @@ $(document).ready(function () {
         var textTicket = ``;
         if (result.length != 0) {
             $.each(result, function (key, val) {
-                textTicket += `<tr data-bs-toggle="modal" data-bs-target="#ModalInputTiket">`;
+                textTicket += `<tr data-bs-toggle="modal" data-bs-target="#ModalTicketHistories" onclick="detailTicket( ${objSession.Id}, '${result[key].ticket_Id}' )">`;
                 textTicket += `<th scope="row">${key + 1}</th>`;
                 textTicket += `<td>${result[key].ticket_Id}</td>`;
                 textTicket += `<td>${result[key].category}</td>`;
