@@ -123,5 +123,14 @@ namespace API.Repository.Data
             //jika memiliki last_name, maka concat dengan first_name
             return emp.First_name + " " + emp.Last_name;
         }
+
+        public string GetEmployeeId(string EmployeeEmail)
+        {
+            Employee emp = myContext.Employees.Where(c => c.Email == EmployeeEmail).FirstOrDefault();
+
+
+
+            return emp.Id;
+        }
     }
 }

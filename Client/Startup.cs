@@ -40,6 +40,7 @@ namespace Client
             //Add scoped
             services.AddScoped<Address>();
             services.AddScoped<LoginCustomerRepository>();
+            services.AddScoped<LoginEmployeeRepository>();
 
             //Add Authen
             services.AddAuthentication(auth =>

@@ -1,0 +1,309 @@
+﻿@{
+    ViewData["Title"] = "Dashboard Employee";
+}
+
+@{
+    Layout = "_LayoutDashboardEmployee";
+}
+
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<div class="page-body">
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row second-chart-list third-news-update">
+
+            <div class="col-xl-12 xl-100 chart_data_left box-col-12">
+                <div class="card">
+                    <div class="card-body p-0">
+                        <div class="row m-0 chart-main">
+                            <div class="col-xl-12 col-md-12 col-sm-12 p-0 box-col-12">
+                                <div style="padding:30px 20px 30px 20px;">
+                                    <center>
+                                        <div class="badge f-12">
+                                            <span id="txt" style="font-size:55px;color:black"></span>
+                                        </div>
+
+                                        <h4 class="f-w-600">
+
+                                            <span id="greeting" style="font-weight:lighter">Good Morning</span>, <span style="font-weight:bolder"> @HttpContextAccessor.HttpContext.Session.GetString("Name")</span>
+                                            <br />
+                                            <span style="font-weight: lighter; font-size: 18px">You are </span> <span style="font-weight: bolder; font-size: 18px"> @HttpContextAccessor.HttpContext.Session.GetString("Role")</span>
+
+                                        </h4>
+
+
+                                    </center>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-sm-6 col-xl-3 col-lg-6">
+                <div class="card o-hidden">
+                    <div class="bg-primary b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center"><i data-feather="database"></i></div>
+                            <div class="media-body">
+                                <span class="m-0">Total Keluhan</span>
+                                <h4 class="mb-0 counter">6659</h4><i class="icon-bg" data-feather="database"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3 col-lg-6">
+                <div class="card o-hidden">
+                    <div class="bg-secondary b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center"><i data-feather="user-plus"></i></div>
+                            <div class="media-body">
+                                <span class="m-0">Jumlah Pengguna</span>
+                                <h4 class="mb-0 counter">45631</h4><i class="icon-bg" data-feather="user-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3 col-lg-6">
+                <div class="card o-hidden">
+                    <div class="bg-warning b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center"><i data-feather="alert-octagon"></i></div>
+                            <div class="media-body">
+                                <span class="m-0">Keluhan Diproses</span>
+                                <h4 class="mb-0 counter">9856</h4><i class="icon-bg" data-feather="alert-octagon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3 col-lg-6">
+                <div class="card o-hidden">
+                    <div class="bg-success b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center"><i data-feather="check-circle"></i></div>
+                            <div class="media-body">
+                                <span class="m-0">Keluhan Ditutup</span>
+                                <h4 class="mb-0 counter">893</h4><i class="icon-bg" data-feather="check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Daftar Keluhanmu</h3>
+                        <span>
+                            Dibawah ini merupakan daftar tiket keluhanmu, jangan khawatir tiketmu akan segera kami proses.
+                        </span>
+                        <input type="hidden" id="hdnSessionId" data-value="@HttpContextAccessor.HttpContext.Session.GetString("Id")" />
+                        <input type="hidden" id="hdnSessionName" data-value="@HttpContextAccessor.HttpContext.Session.GetString("Name")" />
+                        <input type="hidden" id="hdnSessionEmail" data-value="@HttpContextAccessor.HttpContext.Session.GetString("Email")" />
+                        <input type="hidden" id="hdnSessionRole" data-value="@HttpContextAccessor.HttpContext.Session.GetString("Role")" />
+
+                    </div>
+                    <div class="card-block row" style="padding:40px 10px 40px 10px">
+                        <div class="col-sm-12 col-lg-12 col-xl-12">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="bg-primary" style="text-align:center">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Ticket Id</th>
+                                            <th scope="col">Category</th>
+                                            <th scope="col">Issue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ticketTableCustomer" style="text-align:center">
+                                        <tr>
+                                            <td colspan="4"> Belum ada tiket </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+</div>
+
+<!--/////////////////////////////////// MODAL INPUT TIKET /////////////////////////////////////////////////////////////////////-->
+<div class="modal fade" id="ModalInputTiket" tabindex="-1" role="dialog" aria-labelledby="InputTiket" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Input Tiket</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formInsertTicket" role="form" method="POST" action="" onsubmit="return false;">
+                    <div class="form-group">
+
+                        <div class="container">
+                            <div class="row">
+
+                                <div class="col-12" style="padding-bottom:15px">
+                                    <label class="control-label">Kategori</label>
+                                    <div>
+
+                                        <select name="Categories" class="form-control " id="inputCategories" required>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="container">
+                            <div class="row">
+
+
+                                <div class="col-12">
+                                    <label class="control-label">Apa keluhanmu?</label>
+                                    <div>
+                                        <textarea name="Issue" class="form-control" id="inputIssue" rows="3" required></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+
+            </div>
+
+            <center>
+                <div style="padding-bottom:25pt;margin-top:5%">
+                    <div class="form-group">
+                        <div>
+                            <button class="btn btn-primary" type="submit" onclick="addTicket()">Submit Ticket</button>
+                        </div>
+                    </div>
+                </div>
+
+            </center>
+
+            @*<div class="modal-footer">
+                    <center>
+                        <div>
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" type="button">Save changes</button>
+                        </div>
+
+                    </center>
+
+                </div>*@
+
+        </div>
+    </div>
+</div>
+
+<!--/////////////////////////////////// MODAL CEK TIKET HISTORIES /////////////////////////////////////////////////////////////////////-->
+<div class="modal fade" id="ModalTicketHistories" tabindex="-1" role="dialog" aria-labelledby="RiwayatTiket" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h4 class="modal-title">Lacak Tiketmu</h4>*@
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <center>
+                    <span>
+                        Dengan Nomor Tiket
+                    </span>
+                    <div id="customerTikcetId">
+
+                    </div>
+
+                </center>
+                <div class="table-responsive" style="padding-top:5%">
+                    <table class="table table-bordernone">
+                        <thead style="text-align:center">
+                            <tr>
+                                @*<th scope="col">#</th>*@
+                                <th scope="col">Tanggal</th>
+                                <th scope="col"></th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ticketHistoriesTableCustomer" style="text-align:center">
+
+                            <tr>
+                                @*<th class="border-bottom-0" scope="row">1</th>*@
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>mdo</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+
+            
+
+
+            <div class="modal-footer">
+                        <div>
+                            <center>
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+
+                            </center>
+                            @*<button class="btn btn-primary" type="button">Save changes</button>*@
+                        </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+</script>
