@@ -96,7 +96,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost("setPriority")]
+        [HttpPut("setPriority")]
         public ActionResult SetPriority(SetPriorityVM setPriorityVM)
         {
             try
@@ -189,7 +189,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost("respond")]
+        [HttpPut("respond")]
         public ActionResult Respond(RespondTicketVM respondTicketVM)
         {
             try
