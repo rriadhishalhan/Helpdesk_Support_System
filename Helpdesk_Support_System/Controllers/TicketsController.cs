@@ -28,6 +28,21 @@ namespace API.Controllers
             {
                 int result = ticketRepository.CreateTicket(createTicketVM);
 
+                if (result == -1)
+                {
+                    return NotFound("Customer Not Found");
+                }
+
+                if (result == -2)
+                {
+                    return NotFound("Category Not Found");
+                }
+
+                if (result == -3)
+                {
+                    return BadRequest("Issue cant be null");
+                }
+
                 return Ok("Create Ticket Success");
             } catch(Exception)
             {
