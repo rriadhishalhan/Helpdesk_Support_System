@@ -21,13 +21,31 @@ namespace API.Repository.Data
 
         public int CreateTicket(CreateTicketVM createTicketVM)
         {
+            Customer customer = myContext.Customers.Where(c => c.Id == createTicketVM.Customer_Id).FirstOrDefault();
+            if (customer == null)
+            {
+                return -1;
+            }
+
+            Category category = myContext.Categories.Where(cat => cat.Id == createTicketVM.Category_Id).FirstOrDefault();
+            if (category == null)
+            {
+                return -2;
+            }
+
+            if (createTicketVM.Issue == null || createTicketVM.Issue == "")
+            {
+                return -3;
+            }
+
+            //membuat UID untuk ticket
             DateTime now = DateTime.Now;
             string customerId = createTicketVM.Customer_Id.Substring(2);
             string datetime = now.ToString("ddMMyyyHHmmss");
             string categoryId = createTicketVM.Category_Id.ToString().PadLeft(3, '0');
             string ticketId = customerId + datetime + categoryId;
             
-            
+            //menyimpan data ticket pada table ticket
             myContext.Tickets.Add(new Ticket
             {
                 Id = ticketId,
@@ -37,14 +55,20 @@ namespace API.Repository.Data
             });
             myContext.SaveChanges();
 
+            //mencatatnya pada table ticketHistories
             myContext.TicketHistories.Add(new TicketHistory
             {
                 Ticket_Id = ticketId,
                 Status = Status.Terkirim,
-                Start_date = now,
-                //Employee_Id = "22001"
+                Start_date = now
             });
             myContext.SaveChanges();
+
+            Forward(new ForwardTicketVM
+            {
+                Ticket_Id = ticketId,
+                To_Employee_Id = "22001",
+            });
 
             return 1;
 
