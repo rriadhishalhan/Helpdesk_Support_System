@@ -1,14 +1,14 @@
 ﻿
 function addTicket() {
-    let obj = new Object();
+    let ticket = new Object();
 
-    obj.Customer_id = objSession.Id.toString();
+    ticket.Customer_id = objSession.Id.toString();
 
-    obj.Issue = $("#inputIssue").val();
+    ticket.Issue = $("#inputIssue").val();
 
-    obj.Category_id = Number($("#inputCategories").val());
+    ticket.Category_id = Number($("#inputCategories").val());
 
-    console.log(obj);
+    console.log(ticket);
 
     $("#formInsertTicket").validate({
         rules: {
