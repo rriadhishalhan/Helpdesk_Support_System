@@ -132,5 +132,20 @@ namespace API.Controllers
                     "LOGIN Server Error");
             }
         }
+
+        [HttpGet("{employeeId}/tickets")]
+        public ActionResult EmployeeTickets(string employeeId)
+        {
+            try
+            {
+                var result = employeeRepository.EmployeeTickets(employeeId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "CUSTOMER TICKETS Server Error");
+            }
+        }
     }
 }
