@@ -132,5 +132,31 @@ namespace API.Repository.Data
 
             return emp.Id;
         }
+
+        public ICollection EmployeeTickets(string employeeId)
+        {
+            var employeeTickets = (from c in myContext.Customers
+                                   join t in myContext.Tickets on c.Id equals t.Customer_Id
+                                   join th in myContext.TicketHistories on t.Id equals th.Ticket_Id
+                                   join emp in myContext.Employees on th.Employee_Id equals emp.Id into temp1
+                                   from emp in temp1.DefaultIfEmpty()
+                                   join ctgs in myContext.Categories on t.Category_Id equals ctgs.Id
+                                   join prio in myContext.Priorities on t.Priority_Id equals prio.Id into temp2
+                                   from prio in temp2.DefaultIfEmpty()
+                                   where th.Start_date == (myContext.TicketHistories.Where(thn => thn.Ticket_Id == t.Id).Max(thn => thn.Start_date)) && th.Employee_Id == employeeId
+                                   select new
+                                   {
+                                       Ticket_Id = t.Id,
+                                       Employee_Id = th.Employee_Id,
+                                       Employee_Name = (emp == null) ? null : $"{emp.First_name} {emp.Last_name}",
+                                       Priority = (prio == null) ? null : prio.Name,
+                                       Priority_Weight = (prio == null) ? null : $"{prio.Weight}",
+                                       Category = ctgs.Name,
+                                       Issue = t.Issue,
+                                       Solution = t.Solution,
+                                       Feedback = t.Feedback
+                                   }).ToList();
+            return employeeTickets;
+        }
     }
 }
