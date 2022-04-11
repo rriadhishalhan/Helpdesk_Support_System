@@ -33,7 +33,7 @@ function addTicket() {
             $(element).removeClass('is-invalid');
         }
     });
-    if ($("#formInsertTicket").valid() && !Number.isNaN(obj.Category_id)) {
+    if ($("#formInsertTicket").valid() && !Number.isNaN(ticket.Category_id)) {
 
         $.ajax({
             headers: {
@@ -43,7 +43,7 @@ function addTicket() {
             type: "POST",
             url: "https://localhost:44376/API/Tickets/createTicket",
             dataType: "json",
-            data: JSON.stringify(obj)
+            data: JSON.stringify(ticket)
         }).done((result) => {
             Swal.fire({
                 icon: 'success',
@@ -72,7 +72,7 @@ function detailTicket(id, ticketId) {
     //console.log(ticketId)
     let textUrlDetail = "https://localhost:44376/API/Customers/" + id + "/tickets/" + ticketId +"/history";
     let textUrlGetTicket = "https://localhost:44376/API/Tickets/"  + ticketId ;
-    //console.log(textUrlDetail);
+    console.log(textUrlDetail);
 
     $.ajax({
         type: "GET",

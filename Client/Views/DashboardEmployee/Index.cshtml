@@ -134,7 +134,7 @@
                                             <th scope="col">Issue</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="ticketTableCustomer" style="text-align:center">
+                                    <tbody id="ticketTableEmployee" style="text-align:center">
                                         <tr>
                                             <td colspan="4"> Belum ada tiket </td>
                                         </tr>
@@ -154,92 +154,10 @@
     <!-- Container-fluid Ends-->
 </div>
 
-<!--/////////////////////////////////// MODAL INPUT TIKET /////////////////////////////////////////////////////////////////////-->
-<div class="modal fade" id="ModalInputTiket" tabindex="-1" role="dialog" aria-labelledby="InputTiket" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Input Tiket</h5>
-                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
 
-            <div class="modal-body">
-                <form id="formInsertTicket" role="form" method="POST" action="" onsubmit="return false;">
-                    <div class="form-group">
-
-                        <div class="container">
-                            <div class="row">
-
-                                <div class="col-12" style="padding-bottom:15px">
-                                    <label class="control-label">Kategori</label>
-                                    <div>
-
-                                        <select name="Categories" class="form-control " id="inputCategories" required>
-                                        </select>
-
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <div class="container">
-                            <div class="row">
-
-
-                                <div class="col-12">
-                                    <label class="control-label">Apa keluhanmu?</label>
-                                    <div>
-                                        <textarea name="Issue" class="form-control" id="inputIssue" rows="3" required></textarea>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </form>
-
-
-            </div>
-
-            <center>
-                <div style="padding-bottom:25pt;margin-top:5%">
-                    <div class="form-group">
-                        <div>
-                            <button class="btn btn-primary" type="submit" onclick="addTicket()">Submit Ticket</button>
-                        </div>
-                    </div>
-                </div>
-
-            </center>
-
-            @*<div class="modal-footer">
-                    <center>
-                        <div>
-                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" type="button">Save changes</button>
-                        </div>
-
-                    </center>
-
-                </div>*@
-
-        </div>
-    </div>
-</div>
 
 <!--/////////////////////////////////// MODAL CEK TIKET HISTORIES /////////////////////////////////////////////////////////////////////-->
-<div class="modal fade" id="ModalTicketHistories" tabindex="-1" role="dialog" aria-labelledby="RiwayatTiket" aria-hidden="true">
+<div class="modal fade" id="ModalTicketDetail" tabindex="-1" role="dialog" aria-labelledby="Detail Ticket" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -248,37 +166,85 @@
             </div>
 
             <div class="modal-body">
-                <center>
-                    <span>
-                        Dengan Nomor Tiket
-                    </span>
-                    <div id="customerTikcetId">
+
+
+                <form role="form" method="POST" action="" onsubmit="return false;">
+                    <input type="hidden" name="_token" value="">
+                    <div class="form-group">
+
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <label class="control-label">Ticket Id</label>
+                                    <div id="updateTicketId">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-4">
+                                    <label class="control-label">Priority</label>
+                                    <div id="updatePriority">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+
+                        <div class="container">
+                            <div class="row">
+
+                                <div class="col-12" style="padding-top:5%">
+                                    <label class="control-label">Keluhan</label>
+                                    <div id="UpdateIssue">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
 
                     </div>
 
-                </center>
-                <div class="table-responsive" style="padding-top:5%">
-                    <table class="table table-bordernone">
-                        <thead style="text-align:center">
-                            <tr>
-                                @*<th scope="col">#</th>*@
-                                <th scope="col">Tanggal</th>
-                                <th scope="col"></th>
-                                <th scope="col">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ticketHistoriesTableCustomer" style="text-align:center">
+                    <div class="form-group">
 
-                            <tr>
-                                @*<th class="border-bottom-0" scope="row">1</th>*@
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>mdo</td>
-                            </tr>
+                        <div class="container">
+                            <div class="row">
 
-                        </tbody>
-                    </table>
-                </div>
+                                <div class="col-12" style="padding-top:5%">
+                                    <label class="control-label">Solusi Anda</label>
+                                    <div id="UpdateSolution">
+                                        <textarea name="Issue" class="form-control" id="inputSolution" rows="3" required></textarea>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    
+
+
+
+                    @* BTN UPSATE *@
+                    <center>
+                        <div class="form-group">
+                            <div>
+                                @*<input class="btn btn-default" type="reset" value="Reset" style="margin-right:5%">*@
+                                <button type="submit" class="btn btn-primary" onclick="updateEmployee()">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    </center>
+
+                </form>
+
 
 
             </div>
