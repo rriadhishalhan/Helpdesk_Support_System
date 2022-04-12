@@ -11,13 +11,13 @@ function dataDetailTicket(employeeId, TicketId, role) {
         $('#updateTicketId').html('<input id="FormUpdateTicketId" type="text" class="form-control input-group-sm" name="ticketId" placeholder="' + result.id + '" value="' + result.id + '" disabled>');
         $('#UpdateIssue').html(' <textarea id="FormUpdateIssue" class="form-control" rows="3" placeholder="' + result.issue + '" value="' + result.issue + '" disabled></textarea>');
         if (role =="Server Engineer") {
-            var textBtn = `<button type="submit" class="btn btn-success" onclick=""> Kirim </button>`;
+            var textBtn = `<button type="submit" class="btn btn-success" onclick="KirimSolusi('${employeeId}','${result.id}','${role}')" title="Anda akan mengirimkan solusi ke customer"> Kirim </button>`;
             console.log(textBtn);
             $('#formBtn').html(textBtn);
         }
         else {
             var textBtn = `<button type="submit" class="btn btn-danger" onclick="EskalasiTicket('${employeeId}','${result.id}','${role}')" style="margin-right:8%" title="Tiket ini akan diserahkan ke Engineer"> Eskalasi </button>`;
-            textBtn += `<button type="submit" class="btn btn-success" onclick=""> Kirim </button>`;
+            textBtn += `<button type="submit" class="btn btn-success" onclick="KirimSolusi('${employeeId}','${result.id}','${role}')" title="Anda akan mengirimkan solusi ke customer"> Kirim </button>`;
             console.log(textBtn);
             $('#formBtn').html(textBtn);
         }
@@ -135,7 +135,7 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
                         dataType: "json",
                         data: JSON.stringify(ForwardTicket)
                     }).done((result) => {
-                        console.log("sukses Meneruskan Tiket tiket");
+                        console.log("sukses Meneruskan Tiket ");
                         Swal.fire({
                             icon: 'success',
                             title: 'Tiket berhasil diteruskan ke ' + result.employee_Id,
@@ -206,7 +206,7 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
                 dataType: "json",
                 data: JSON.stringify(ForwardTicket)
             }).done((result) => {
-                console.log("sukses Meneruskan Tiket tiket");
+                console.log("sukses Meneruskan Tiket ");
                 Swal.fire({
                     icon: 'success',
                     title: 'Tiket berhasil diteruskan ke ' + result.employee_Id,
@@ -230,7 +230,82 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
     }
 }
 
+function KirimSolusi(EmployeeId, TicketId, role) {
+    console.log("Masuk Kirim Solusi");
 
+    let OpenTicket = new Object();
+    OpenTicket.Ticket_Id = TicketId;
+    OpenTicket.Opener_Employee_Id = EmployeeId;
+
+
+    let solutionTicket = new Object();
+    solutionTicket.Ticket_Id = TicketId;
+    solutionTicket.Employee_Id = EmployeeId;
+    solutionTicket.Solution = $('#inputSolution').val();
+
+    console.log("Object buat Open Ticket");
+    console.log(OpenTicket);
+    console.log("Object buat Respond Ticket");
+    console.log(solutionTicket);
+
+    if (solutionTicket.Solution != "") {
+
+        //START OF AJAX OPEN TICKET
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "POST",
+            url: "https://localhost:44376/API/Tickets/open",
+            dataType: "json",
+            data: JSON.stringify(OpenTicket)
+        }).done((result) => {
+
+            console.log("sukses Membuka tiket")
+            //START OF AJAX RESPOND TIKET
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "PUT",
+                url: "https://localhost:44376/API/Tickets/respond",
+                dataType: "json",
+                data: JSON.stringify(solutionTicket)
+            }).done((result) => {
+                console.log("sukses Memberikan Solusi pada tiket");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil memberikan solusi pada Tiket',
+                }).then((result) => {
+                    window.location.reload();
+                })
+
+            }).fail((error) => {
+                console.log(error);
+
+            });
+            //END OF AJAX RESPOND TIKET
+
+
+        }).fail((error) => {
+            console.log(error);
+
+        });
+        //END OF AJAX OPEN TICKET
+
+    }
+    else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Solusi belum diisi, silahkan dicek kembali',
+            timer: 2000,
+        })
+    }
+
+};
 
 //GET SESSION DATA FROM HTML//
 let objSession = new Object();
