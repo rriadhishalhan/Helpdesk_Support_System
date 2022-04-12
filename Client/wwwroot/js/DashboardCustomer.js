@@ -164,121 +164,7 @@ function detailTicket(id, ticketId) {
 
 }
 
-function dataUpdate(nik) {
-    $.ajax({
-        type: "GET",
-        url: "https://localhost:44368/employees/get/" + nik,
-        data: {}
-    }).done((result) => {
-        console.log(result);
-        $('#updateNik').html('<input id="FormUpdateNik" type="text" class="form-control input-group-sm" name="Nik" placeholder="' + result.nik + '" value="' + result.nik +'" disabled>');
-        $('#updateFirstName').html('<input id="FormUpdateFirstName" type="text" class="form-control input-group-sm" name="FirstName" placeholder="' + result.firstName + '" value="' + result.firstName +'" disabled>');
-        $('#updateLastName').html('<input id="FormUpdateLastName" type="text" class="form-control input-group-sm" name="LastName" placeholder="' + result.lastName + '" value="' + result.lastName +'" disabled>');
-        $('#updatePhoneNumber').html('<input id="FormUpdatePhoneNumber" type="text" class="form-control input-group-sm" name="PhoneNumber" placeholder="' + result.phone + '" value="' + result.phone +'" disabled>');
-        gender = result.gender;
-        if (gender == 0) {
-            var inputMale = `<input type='radio' id="updateMale" name="GenderRadioUpdate" value="0"  disabled checked='checked'>`;
-            var labelMale = `<label for='updateMale'>Male</label>`;
-            var inputFemale = `<input type='radio' id="updateFemale" name="GenderRadioUpdate" value="1" disabled>`;
-            var labelFemale = `<label for='updateFemale'>Female</label>`;
-            $(`#updateGender`).html(inputMale + labelMale + inputFemale + labelFemale);
-        }
-        else {
-            var inputMale = `<input type='radio' id="updateMale" name="GenderRadioUpdate" value="0"  disabled>`;
-            var labelMale = `<label for='updateMale'>Male</label>`;
-            var inputFemale = `<input type='radio' id="updateFemale" name="GenderRadioUpdate" value="1" disabled checked='checked' >`;
-            var labelFemale = `<label for='updateFemale'>Female</label>`;
-            $(`#updateGender`).html(inputMale + labelMale + inputFemale + labelFemale);
-        }
-        $('#updateDate').html('<input id="UpdateFormBirthDate" type="text" class="form-control input-group-sm" name="BirthDate" placeholder="' + result.birthDate + '" value="' + result.birthDate + '" disabled>');
-        $('#updateSalary').html('<input id="UpdateFormSalary" type="number" class="form-control input-group-sm" name="Salary" placeholder="' + result.salary + '" value="" >');
-        $('#updateEmail').html('<input id="UpdateFormEmail" type="text" class="form-control input-group-sm" name="Email" placeholder="' + result.email + '" value="' + result.email + '" disabled>');
 
-    }).fail((err) => {
-        console.log(err);
-    });
-}
-
-function updateEmployee() {
-    let obj = new Object();
-
-    obj.Nik = $("#FormUpdateNik").val();
-    obj.FirstName = $("#FormUpdateFirstName").val();
-    obj.LastName = $("#FormUpdateLastName").val();
-    obj.Phone = $("#FormUpdatePhoneNumber").val();
-
-    var listGender = document.getElementsByName('GenderRadioUpdate');
-    for (var i = 0; i < listGender.length; i++) {
-        if (listGender[i].checked) {
-            obj.gender = parseInt(listGender[i].value);
-            break;
-        }
-    }
-    obj.BirthDate = $("#UpdateFormBirthDate").val();
-    obj.Salary = Number($("#UpdateFormSalary").val());
-    obj.Email = $("#UpdateFormEmail").val();
-
-    $.ajax({
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        type: "PUT",
-        url: "https://localhost:44368/employees/put/",
-        dataType: "json",
-        data: JSON.stringify(obj)
-    }).done((result) => {
-        Swal.fire({
-            icon: 'success',
-            title: 'Data dengan NIK '+obj.Nik +' berhasil diubah',
-        }).then((result) => {
-            window.location.reload();
-        })
-
-    }).fail((error) => {
-        //alert pemberitahuan jika gagal
-        console.log(error);
-
-    })
-}
-
-function deleteEmployee(nik) {
-    Swal.fire({
-        title: 'Apakah anda yakin?',
-        text: "Data dengan NIK "+nik+" akan dihapus",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya',
-        cancelButtonText: 'Tidak',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                type: "DELETE",
-                url: "https://localhost:44368/employees/delete/" + nik,
-                data: {}
-            }).done((result) => {
-                Swal.fire(
-                    'Deleted!',
-                    'Data dengan NIK '+nik+" telah dihapus",
-                    'success'
-                ).then((result) => {
-                    window.location.reload();
-                })
-            }).fail((err) => {
-                console.log(err);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!'+err,
-                })
-            });
-            
-        }
-    })
-
-}
 
 
 //GET SESSION DATA FROM HTML//
@@ -293,36 +179,66 @@ console.log(objSession);
 $(document).ready(function () {
 
     //GET ALL TICKET FROM CUSTOMER ID
-    $.ajax({
-        type: "GET",
-        url: "https://localhost:44376/api/Customers/" + objSession.Id+"/Tickets/",
-        data: {}
-    }).done((result) => {
 
-        var textTicket = ``;
-        if (result.length != 0) {
-            $.each(result, function (key, val) {
-                textTicket += `<tr data-bs-toggle="modal" data-bs-target="#ModalTicketHistories" onclick="detailTicket( ${objSession.Id}, '${result[key].ticket_Id}' )">`;
-                textTicket += `<th scope="row">${key + 1}</th>`;
-                textTicket += `<td>${result[key].ticket_Id}</td>`;
-                textTicket += `<td>${result[key].category}</td>`;
-                textTicket += `<td>${result[key].issue}</td>`;
-                textTicket += `</tr>`;
-                console.log(textTicket);
-            });
-        } else {
-            textTicket += `<tr>`;
-            textTicket += `<td colspan= "4"> Belum ada tiket </td>`;
-            textTicket += `</tr>`;
+    $("#ticketDataTable").DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        "ajax": {
+            "url": "https://localhost:44376/api/Customers/" + objSession.Id + "/Tickets/",
+            "dataSrc": "",
+        },
+        "columns": [
+            {
+                "data": null, "sortable": false,
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            { "data": "ticket_Id" },
+            { "data": "category" },
+            { "data": "issue" },
+            {
+                "data": null,
+                render: function (data, type, row) {
+                    var btnDetail = `<button data-bs-toggle="modal" data-bs-target="#ModalTicketHistories" onclick="detailTicket( ${objSession.Id}, '${data.ticket_Id}' )" class="btn btn-info"  title="Show Detail"> <i class="fa fa-info" aria-hidden="true"></i></button>`;
+                    
+                    return btnDetail;
+                }
+            },
 
-            console.log(textTicket);
-
-        }
-        
-        $('#ticketTableCustomer').html(textTicket);
-    }).fail((err) => {
-        console.log(err);
+        ],
     });
+
+    //$.ajax({
+    //    type: "GET",
+    //    url: "https://localhost:44376/api/Customers/" + objSession.Id+"/Tickets/",
+    //    data: {}
+    //}).done((result) => {
+
+    //    var textTicket = ``;
+    //    if (result.length != 0) {
+    //        $.each(result, function (key, val) {
+    //            textTicket += `<tr data-bs-toggle="modal" data-bs-target="#ModalTicketHistories" onclick="detailTicket( ${objSession.Id}, '${result[key].ticket_Id}' )">`;
+    //            textTicket += `<th scope="row">${key + 1}</th>`;
+    //            textTicket += `<td>${result[key].ticket_Id}</td>`;
+    //            textTicket += `<td>${result[key].category}</td>`;
+    //            textTicket += `<td>${result[key].issue}</td>`;
+    //            textTicket += `</tr>`;
+    //            console.log(textTicket);
+    //        });
+    //    } else {
+    //        textTicket += `<tr>`;
+    //        textTicket += `<td colspan= "4"> Belum ada tiket </td>`;
+    //        textTicket += `</tr>`;
+
+    //        console.log(textTicket);
+
+    //    }
+        
+    //    $('#ticketTableCustomer').html(textTicket);
+    //}).fail((err) => {
+    //    console.log(err);
+    //});
 
     //BUAT SELECT OPTION CATEGORIES
     $.ajax({

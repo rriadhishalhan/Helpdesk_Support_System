@@ -57,9 +57,9 @@
                 <div class="card">
                     <div class="card-header">
                         <h3>Daftar Keluhanmu</h3>
-                        <span>
+                        <p>
                             Dibawah ini merupakan daftar tiket keluhanmu, jangan khawatir tiketmu akan segera kami proses.
-                        </span>
+                        </p>
                         <input type="hidden" id="hdnSessionId" data-value="@HttpContextAccessor.HttpContext.Session.GetString("Id")" />
                         <input type="hidden" id="hdnSessionName" data-value="@HttpContextAccessor.HttpContext.Session.GetString("Name")" />
                         <input type="hidden" id="hdnSessionEmail" data-value="@HttpContextAccessor.HttpContext.Session.GetString("Email")" />
@@ -68,14 +68,15 @@
                     </div>
                     <div class="card-block row" style="padding:40px 10px 40px 10px">
                         <div class="col-sm-12 col-lg-12 col-xl-12">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
+                            <div class="table-responsive" >
+                                <table class="hover" id="ticketDataTable">
                                     <thead class="bg-primary" style="text-align:center">
                                         <tr>
                                             <th scope="col">#</th>
                                             <th scope="col">Ticket Id</th>
                                             <th scope="col">Category</th>
                                             <th scope="col">Issue</th>
+                                            <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="ticketTableCustomer" style="text-align:center">
