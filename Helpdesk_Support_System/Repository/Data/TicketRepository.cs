@@ -216,16 +216,6 @@ namespace API.Repository.Data
                     return "-2";
                 }
 
-                //tambahkan workload untuk employee reciever
-                //kurangin workload employee dengan weight si ticket
-                employeeReciever.Workload += ticketWeight;
-
-                //update data employee
-                myContext.Employees.Attach(employeeReciever);
-                myContext.Entry(employeeReciever).State = EntityState.Modified;
-                myContext.SaveChanges();
-
-
                 //jika yang meneruskan ticket tidak bernilai null dan bukan merupakan admin
                 if (employeeSender.Position_id != 1)
                 {
