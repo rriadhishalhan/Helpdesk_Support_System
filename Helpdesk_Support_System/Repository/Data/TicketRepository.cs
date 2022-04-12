@@ -178,7 +178,7 @@ namespace API.Repository.Data
             }
         }
 
-        public int Forward(ForwardTicketVM forwardTicketVM)
+        public string Forward(ForwardTicketVM forwardTicketVM)
         {
             try
             {
@@ -189,7 +189,7 @@ namespace API.Repository.Data
                 Ticket ticket = myContext.Tickets.Where(t => t.Id == forwardTicketVM.Ticket_Id).FirstOrDefault();
                 if (ticket == null)
                 {
-                    return -1;
+                    return "-1";
                 }
 
                 //mendapatkan informasi terkait employee yang meneruskan ticket tersebut
@@ -213,8 +213,18 @@ namespace API.Repository.Data
                 //jika tidak ada employee yang sedang tidak sibuk
                 if (employeeReciever == null)
                 {
-                    return -2;
+                    return "-2";
                 }
+
+                //tambahkan workload untuk employee reciever
+                //kurangin workload employee dengan weight si ticket
+                employeeReciever.Workload += ticketWeight;
+
+                //update data employee
+                myContext.Employees.Attach(employeeReciever);
+                myContext.Entry(employeeReciever).State = EntityState.Modified;
+                myContext.SaveChanges();
+
 
                 //jika yang meneruskan ticket tidak bernilai null dan bukan merupakan admin
                 if (employeeSender.Position_id != 1)
@@ -225,6 +235,7 @@ namespace API.Repository.Data
                     //update data employee
                     myContext.Employees.Attach(employeeSender);
                     myContext.Entry(employeeSender).State = EntityState.Modified;
+                    myContext.SaveChanges();
                 }
 
                 //update ticket history
@@ -236,7 +247,9 @@ namespace API.Repository.Data
                     Ticket_Id = forwardTicketVM.Ticket_Id
                 });
 
-                return myContext.SaveChanges();
+                myContext.SaveChanges();
+
+                return employeeReciever.Id;
             } catch (Exception e)
             {
                 throw e;
