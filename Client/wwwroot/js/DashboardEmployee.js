@@ -264,7 +264,7 @@ $(document).ready(function () {
 
     $.ajax({
         type: "GET",
-        url: "https://localhost:44376/api/Customers/" + objSession.Id+"/Tickets/",
+        url: "https://localhost:44376/api/Employees/" + objSession.Id+"/Tickets/",
         data: {}
     }).done((result) => {
 

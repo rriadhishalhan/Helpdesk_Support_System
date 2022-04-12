@@ -1,14 +1,14 @@
 ﻿
 function addTicket() {
-    let obj = new Object();
+    let ticket = new Object();
 
-    obj.Customer_id = objSession.Id.toString();
+    ticket.Customer_id = objSession.Id.toString();
 
-    obj.Issue = $("#inputIssue").val();
+    ticket.Issue = $("#inputIssue").val();
 
-    obj.Category_id = Number($("#inputCategories").val());
+    ticket.Category_id = Number($("#inputCategories").val());
 
-    console.log(obj);
+    console.log(ticket);
 
     $("#formInsertTicket").validate({
         rules: {
@@ -71,6 +71,7 @@ function addTicket() {
 function detailTicket(id, ticketId) {
     //console.log(ticketId)
     let textUrlDetail = "https://localhost:44376/API/Customers/" + id + "/tickets/" + ticketId +"/history";
+    let textUrlGetTicket = "https://localhost:44376/API/Tickets/"  + ticketId ;
     //console.log(textUrlDetail);
 
     $.ajax({
@@ -80,11 +81,40 @@ function detailTicket(id, ticketId) {
     }).done((result) => {
         $('#customerTikcetId').html('<h4 style="font-weight:bolder; line-height: 35px;">' + ticketId + '</h4>');
 
+        //GET TICKET BY ID
+        $.ajax({
+            type: "GET",
+            url: textUrlGetTicket,
+            data: {}
+        }).done((resultTicket) => {
+            console.log("Masuk Ajax Get Ticket by ID nih ");
+            $('#customerIssue').html('<h4 style="font-weight:bolder; line-height: 35px;">' + resultTicket.issue + '</h4>');
+
+            var textTicketSolutionDanFeedback = ``;
+            if (resultTicket.solution != null) {
+                textTicketSolutionDanFeedback += `<span>`;
+                textTicketSolutionDanFeedback += `Solusi dari kami`;
+                textTicketSolutionDanFeedback += `</span>`;
+                textTicketSolutionDanFeedback += `<div>`;
+                textTicketSolutionDanFeedback += `<h4 style="font-weight:bolder; line-height: 35px;">${resultTicket.solution}</h4>`;
+                textTicketSolutionDanFeedback += `</div>`;
+
+            }
+            $('#soulutionAndFeedbackSection').html(textTicketSolutionDanFeedback);
+
+
+        }).fail((error) => {
+            console.log(error);
+
+        });
+
+
+
+
         var currentIndex = 1;
         var textTicketHistories = ``;
+        //START OF LOOP TICKETHISTORIES
         $.each(result, function (key, val) {
-            console.log(key);
-            console.log(currentIndex);
 
             if (currentIndex == result.length) {
                 if (result[key].employee_position == null) {
@@ -123,8 +153,9 @@ function detailTicket(id, ticketId) {
 
             currentIndex += 1;
 
-            console.log(textTicketHistories);
+            //console.log(textTicketHistories);
         });
+        //END OF LOOP TICKETHISTORIES
         $('#ticketHistoriesTableCustomer').html(textTicketHistories);
 
     }).fail((err) => {
@@ -261,7 +292,7 @@ console.log(objSession);
 
 $(document).ready(function () {
 
-
+    //GET ALL TICKET FROM CUSTOMER ID
     $.ajax({
         type: "GET",
         url: "https://localhost:44376/api/Customers/" + objSession.Id+"/Tickets/",
