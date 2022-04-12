@@ -217,7 +217,7 @@
                                 <div class="col-12" style="padding-top:5%">
                                     <label class="control-label">Solusi Anda</label>
                                     <div id="UpdateSolution">
-                                        <textarea name="Issue" class="form-control" id="inputSolution" rows="3" required></textarea>
+                                        <textarea name="Issue" class="form-control" id="inputSolution" rows="3"></textarea>
 
                                     </div>
                                 </div>
@@ -234,11 +234,16 @@
                     @* BTN UPSATE *@
                     <center>
                         <div class="form-group">
-                            <div>
+                            <div id="formBtn" style="padding-top:5%">
                                 @*<input class="btn btn-default" type="reset" value="Reset" style="margin-right:5%">*@
-                                <button type="submit" class="btn btn-primary" onclick="updateEmployee()">
-                                    Update
+
+                                @*<button type="submit" class="btn btn-danger" onclick="EskalasiTicket()" style="margin-right:8%">
+                                    Eskalasi
                                 </button>
+
+                                <button type="submit" class="btn btn-success" onclick="">
+                                    Kirim
+                                </button>*@
                             </div>
                         </div>
                     </center>
@@ -252,17 +257,17 @@
             
 
 
-            <div class="modal-footer">
+            <!--<div class="modal-footer">
                         <div>
                             <center>
                                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
 
-                            </center>
+                            </center>-->
                             @*<button class="btn btn-primary" type="button">Save changes</button>*@
-                        </div>
+                        <!--</div>
 
 
-            </div>
+            </div>-->
 
         </div>
     </div>

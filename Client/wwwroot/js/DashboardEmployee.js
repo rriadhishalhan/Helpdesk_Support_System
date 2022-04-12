@@ -1,19 +1,23 @@
 ﻿
-
-function dataDetailTicket(id, role) {
+function dataDetailTicket(employeeId,TicketId, role) {
     $.ajax({
         type: "GET",
-        url: "https://localhost:44376/API/tickets/" + id,
+        async: false,
+        url: "https://localhost:44376/API/tickets/" + TicketId,
         data: {}
     }).done((result) => {
         console.log(result);
         $('#updateTicketId').html('<input id="FormUpdateTicketId" type="text" class="form-control input-group-sm" name="ticketId" placeholder="' + result.id + '" value="' + result.id + '" disabled>');
         $('#UpdateIssue').html(' <textarea id="FormUpdateIssue" class="form-control" rows="3" placeholder="' + result.issue + '" value="' + result.issue + '" disabled></textarea>');
+        var textBtn = `<button type="submit" class="btn btn-danger" onclick="EskalasiTicket('${employeeId}','${result.id}','${role}')" style="margin-right:8%"> Eskalasi </button>`;
+        textBtn += `<button type="submit" class="btn btn-success" onclick=""> Kirim </button>`;
+        console.log(textBtn);
+        $('#formBtn').html(textBtn);
 
         if (role = "Admin") {
-            console.log("admin neh");
+            console.log("admin neh klik baris tiket");
 
-            $('#updatePriority').html('<select name="Priority" class="form-control " id="selectPriority" ></select >');
+            $('#updatePriority').html('<select id="FormSelectPriority" name="Priority" class="form-control "  ></select >');
             //BUAT SELECT OPTION PRIORITY
             $.ajax({
                 type: "GET",
@@ -25,122 +29,160 @@ function dataDetailTicket(id, role) {
 
                     textPriorities += `<option value="${result[key].id}">${result[key].name}</option>`;
                 });
-                console.log(textPriorities);
-                $('#selectPriority').html(textPriorities);
+                $('#FormSelectPriority').html(textPriorities);
             }).fail((err) => {
                 console.log(err);
             });
 
 
         }
-
-        //$('#updateFirstName').html('<input id="FormUpdateFirstName" type="text" class="form-control input-group-sm" name="FirstName" placeholder="' + result.firstName + '" value="' + result.firstName +'" disabled>');
-        //$('#updateLastName').html('<input id="FormUpdateLastName" type="text" class="form-control input-group-sm" name="LastName" placeholder="' + result.lastName + '" value="' + result.lastName +'" disabled>');
-        //$('#updatePhoneNumber').html('<input id="FormUpdatePhoneNumber" type="text" class="form-control input-group-sm" name="PhoneNumber" placeholder="' + result.phone + '" value="' + result.phone +'" disabled>');
-        //gender = result.gender;
-        //if (gender == 0) {
-        //    var inputMale = `<input type='radio' id="updateMale" name="GenderRadioUpdate" value="0"  disabled checked='checked'>`;
-        //    var labelMale = `<label for='updateMale'>Male</label>`;
-        //    var inputFemale = `<input type='radio' id="updateFemale" name="GenderRadioUpdate" value="1" disabled>`;
-        //    var labelFemale = `<label for='updateFemale'>Female</label>`;
-        //    $(`#updateGender`).html(inputMale + labelMale + inputFemale + labelFemale);
-        //}
-        //else {
-        //    var inputMale = `<input type='radio' id="updateMale" name="GenderRadioUpdate" value="0"  disabled>`;
-        //    var labelMale = `<label for='updateMale'>Male</label>`;
-        //    var inputFemale = `<input type='radio' id="updateFemale" name="GenderRadioUpdate" value="1" disabled checked='checked' >`;
-        //    var labelFemale = `<label for='updateFemale'>Female</label>`;
-        //    $(`#updateGender`).html(inputMale + labelMale + inputFemale + labelFemale);
-        //}
-        //$('#updateDate').html('<input id="UpdateFormBirthDate" type="text" class="form-control input-group-sm" name="BirthDate" placeholder="' + result.birthDate + '" value="' + result.birthDate + '" disabled>');
-        //$('#updateSalary').html('<input id="UpdateFormSalary" type="number" class="form-control input-group-sm" name="Salary" placeholder="' + result.salary + '" value="" >');
-        //$('#updateEmail').html('<input id="UpdateFormEmail" type="text" class="form-control input-group-sm" name="Email" placeholder="' + result.email + '" value="' + result.email + '" disabled>');
 
     }).fail((err) => {
         console.log(err);
     });
 }
 
-function updateEmployee() {
-    let obj = new Object();
-
-    obj.Nik = $("#FormUpdateNik").val();
-    obj.FirstName = $("#FormUpdateFirstName").val();
-    obj.LastName = $("#FormUpdateLastName").val();
-    obj.Phone = $("#FormUpdatePhoneNumber").val();
-
-    var listGender = document.getElementsByName('GenderRadioUpdate');
-    for (var i = 0; i < listGender.length; i++) {
-        if (listGender[i].checked) {
-            obj.gender = parseInt(listGender[i].value);
-            break;
-        }
-    }
-    obj.BirthDate = $("#UpdateFormBirthDate").val();
-    obj.Salary = Number($("#UpdateFormSalary").val());
-    obj.Email = $("#UpdateFormEmail").val();
-
+function getVacantEmployee(FromEmployeeId) {
+    console.log("Masuk Get Vacant");
     $.ajax({
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        type: "PUT",
-        url: "https://localhost:44368/employees/put/",
-        dataType: "json",
-        data: JSON.stringify(obj)
-    }).done((result) => {
-        Swal.fire({
-            icon: 'success',
-            title: 'Data dengan NIK '+obj.Nik +' berhasil diubah',
-        }).then((result) => {
-            window.location.reload();
-        })
+        type: "GET",
+        async: false,
+        url: "https://localhost:44376/API/employees/" + FromEmployeeId,
+        data: {}
+    }).done((resultFromEmployee) => {
 
-    }).fail((error) => {
-        //alert pemberitahuan jika gagal
-        console.log(error);
+        console.log("Masuk ajax get employee by id");
+        console.log(resultFromEmployee);
 
-    })
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: "https://localhost:44376/API/employees",
+            data: {}
+        }).done((resultAllEmployee) => {
+
+            console.log("Masuk ajax get employee all");
+            var toEmployeeId = "";
+
+            for (var i = 0; i < resultAllEmployee.length; i++) {
+                console.log("MASUK FOR");
+                if (resultAllEmployee[i].id != resultFromEmployee.id &&
+                    resultAllEmployee[i].workload < 10 &&
+                    resultAllEmployee[i].position_id == resultFromEmployee.position_id + 1) {
+                    console.log("MASUK IF");
+
+                    toEmployeeId = resultAllEmployee[i].id;
+                    break;
+                }
+                else {
+                    console.log("MASUK ELSE");
+
+                }
+            };
+            console.log(toEmployeeId);
+            return toEmployeeId;
+
+
+        }).fail((err) => {
+            console.log(err);
+        });
+
+
+
+    }).fail((err) => {
+        console.log(err);
+    });
 }
 
-function deleteEmployee(nik) {
-    Swal.fire({
-        title: 'Apakah anda yakin?',
-        text: "Data dengan NIK "+nik+" akan dihapus",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya',
-        cancelButtonText: 'Tidak',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                type: "DELETE",
-                url: "https://localhost:44368/employees/delete/" + nik,
-                data: {}
-            }).done((result) => {
-                Swal.fire(
-                    'Deleted!',
-                    'Data dengan NIK '+nik+" telah dihapus",
-                    'success'
-                ).then((result) => {
-                    window.location.reload();
-                })
-            }).fail((err) => {
-                console.log(err);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!'+err,
-                })
-            });
-            
+function EskalasiTicket(EmployeeId, TicketId, role) {
+
+    if (role = "Admin") {
+        console.log("masuk admin eskalasi");
+        let Priority = new Object();
+        Priority.Ticket_Id = TicketId;
+        Priority.Priority_Id = Number($("#FormSelectPriority").val());
+
+        let OpenTicket = new Object();
+        OpenTicket.Ticket_Id = TicketId ;
+        OpenTicket.Opener_Employee_Id = EmployeeId;
+
+        let toEmployeeId;
+        try {
+            toEmployeeId = getVacantEmployee(EmployeeId);
+            console.log(toEmployeeId);
+
+        } catch (e) {
+            console.log(e);
         }
-    })
 
+
+        let ForwardTicket = new Object();
+        ForwardTicket.Ticket_Id = TicketId;
+        ForwardTicket.To_Employee_Id = toEmployeeId;
+
+
+        console.log("Object buat Priority"  );
+        console.log( Priority);
+        console.log("Object buat Open"  );
+        console.log(OpenTicket);
+        console.log("Object buat Forward");
+        console.log(ForwardTicket);
+
+
+        //if (!Number.isNaN(Priority.Priority_Id)) {
+        //    $.ajax({
+        //        headers: {
+        //            'Accept': 'application/json',
+        //            'Content-Type': 'application/json'
+        //        },
+        //        type: "PUT",
+        //        url: "https://localhost:44376/API/Tickets/setPriority",
+        //        dataType: "json",
+        //        data: JSON.stringify(Priority)
+        //    }).done((result) => {
+        //        console.log("sukses atur priority tiket")
+
+        //        $.ajax({
+        //            headers: {
+        //                'Accept': 'application/json',
+        //                'Content-Type': 'application/json'
+        //            },
+        //            type: "POST",
+        //            url: "https://localhost:44376/API/Tickets/open",
+        //            dataType: "json",
+        //            data: JSON.stringify(OpenTicket)
+        //        }).done((result) => {
+        //            console.log("sukses Membuka tiket")
+
+
+
+        //        }).fail((error) => {
+        //            console.log(error);
+
+        //        })
+
+        //    }).fail((error) => {
+        //        //alert pemberitahuan jika gagal
+        //        console.log(error);
+
+        //    })
+        //}
+        //else {
+        //    Swal.fire({
+        //        icon: 'error',
+        //        title: 'Oops...',
+        //        text: 'Priority belum dipilih, silahkan dicek kembali',
+        //        timer: 2000,
+        //    })
+        //}
+
+        
+    }
+    else {
+
+    }
 }
+
 
 
 //GET SESSION DATA FROM HTML//
@@ -157,6 +199,7 @@ $(document).ready(function () {
 
     $.ajax({
         type: "GET",
+        async:false,
         url: "https://localhost:44376/api/Employees/" + objSession.Id+"/Tickets/",
         data: {}
     }).done((result) => {
@@ -166,13 +209,13 @@ $(document).ready(function () {
         var textTicket = ``;
         if (result.length != 0) {
             $.each(result, function (key, val) {
-                textTicket += `<tr data-bs-toggle="modal" data-bs-target="#ModalTicketDetail" onclick="dataDetailTicket('${result[key].ticket_Id}','${objSession.Role }')">`;
+                textTicket += `<tr data-bs-toggle="modal" data-bs-target="#ModalTicketDetail" onclick="dataDetailTicket('${objSession.Id }','${result[key].ticket_Id}','${objSession.Role }')">`;
                 textTicket += `<th scope="row">${key + 1}</th>`;
                 textTicket += `<td>${result[key].ticket_Id}</td>`;
                 textTicket += `<td>${result[key].category}</td>`;
                 textTicket += `<td>${result[key].issue}</td>`;
                 textTicket += `</tr>`;
-                console.log(textTicket);
+                //console.log(textTicket);
             });
         } else {
             textTicket += `<tr>`;
