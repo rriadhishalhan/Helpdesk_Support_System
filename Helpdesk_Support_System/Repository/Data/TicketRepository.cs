@@ -55,7 +55,7 @@ namespace API.Repository.Data
             });
             myContext.SaveChanges();
 
-            //mencatatnya pada table ticketHistories
+            //mencatatnya pada table ticketHistories dengan status "Terkirim"
             myContext.TicketHistories.Add(new TicketHistory
             {
                 Ticket_Id = ticketId,
@@ -64,12 +64,23 @@ namespace API.Repository.Data
             });
             myContext.SaveChanges();
 
-            Forward(new ForwardTicketVM
+
+            //cari position_id dari admin
+            Position positionAdmin = myContext.Positions.Where(p => p.Name == "Admin").FirstOrDefault();
+            //cari data admin pada table employee
+            Employee employeeAdmin = myContext.Employees.Where(e => e.Position_id == positionAdmin.Id).FirstOrDefault();
+
+            //teruskan ticket ke admin
+            //catat pada table ticketHistories dengan status "Diteruskan"
+            myContext.TicketHistories.Add(new TicketHistory
             {
-                Ticket_Id = ticketId,
-                To_Employee_Id = "22001",
+                Status = Status.Diteruskan,
+                Start_date = DateTime.Now,
+                Employee_Id = employeeAdmin.Id,
+                Ticket_Id = ticketId
             });
 
+            myContext.SaveChanges();
             return 1;
 
         }
@@ -171,36 +182,45 @@ namespace API.Repository.Data
         {
             try
             {
-                //check apakah id ticket yang dimasukan benar dan ada pada database
+                //mendefinisikan beban yang dapat ditanggung employee
+                const int MAX_WORKLOAD = 10;
+
+                //check apakah id ticket yang diberikan valid
                 Ticket ticket = myContext.Tickets.Where(t => t.Id == forwardTicketVM.Ticket_Id).FirstOrDefault();
                 if (ticket == null)
                 {
                     return -1;
                 }
 
-                //check apakah id employee yang akan menerima ticket tersebut merupakan employee yang ada pada database
-                Employee employeeReceiver = myContext.Employees.Where(e => e.Id == forwardTicketVM.To_Employee_Id).FirstOrDefault();
-                if (employeeReceiver == null)
+                //mendapatkan informasi terkait employee yang meneruskan ticket tersebut
+                Employee employeeSender = (Employee)(from t in myContext.Tickets
+                                                     join th in myContext.TicketHistories on t.Id equals th.Ticket_Id
+                                                     join e in myContext.Employees on th.Employee_Id equals e.Id
+                                                     where th.Start_date == myContext.TicketHistories.Where(thn => thn.Ticket_Id == t.Id).Max(thn => thn.Start_date) && th.Ticket_Id == forwardTicketVM.Ticket_Id
+                                                     select e).Single();
+
+                //mendapatkan level saat ini
+                int currentLevel = employeeSender.Position_id;
+
+                //mendapatkan bobot dari ticket
+                int ticketWeight = myContext.Priorities.Where(prio => prio.Id == ticket.Priority_Id).FirstOrDefault().Weight;
+
+                //cari employee yang bukan admin dan bebannya tidak melebihi batas
+                Employee employeeReciever = myContext.Employees
+                                            .Where(e => e.Position_id == currentLevel + 1 && e.Workload + ticketWeight <= MAX_WORKLOAD)
+                                            .FirstOrDefault();
+
+                //jika tidak ada employee yang sedang tidak sibuk
+                if (employeeReciever == null)
                 {
                     return -2;
                 }
 
-                //mendapatkan informasi terkait employee yang meneruskan ticket tersebut
-                Employee employeeSender = (Employee) (from t in myContext.Tickets
-                                 join th in myContext.TicketHistories on t.Id equals th.Ticket_Id
-                                 join e in myContext.Employees on th.Employee_Id equals e.Id into empl
-                                 from e in empl.DefaultIfEmpty()
-                                 where th.Start_date == myContext.TicketHistories.Where(thn => thn.Ticket_Id == t.Id).Max(thn => thn.Start_date) && th.Ticket_Id == forwardTicketVM.Ticket_Id
-                                 select e).Single();
-
                 //jika yang meneruskan ticket tidak bernilai null dan bukan merupakan admin
-                if (employeeSender != null && employeeSender.Position_id != 1)
+                if (employeeSender.Position_id != 1)
                 {
-                    //ambil priority id dari ticket tersebut
-                    int ticketPriorityId = (int) myContext.Tickets.Where(t => t.Id == forwardTicketVM.Ticket_Id).Single().Priority_Id;
-
                     //kurangin workload employee dengan weight si ticket
-                    employeeSender.Workload -= myContext.Priorities.Find(ticketPriorityId).Weight;
+                    employeeSender.Workload -= ticketWeight;
                     
                     //update data employee
                     myContext.Employees.Attach(employeeSender);
@@ -212,7 +232,7 @@ namespace API.Repository.Data
                 {
                     Status = Status.Diteruskan,
                     Start_date = DateTime.Now,
-                    Employee_Id = forwardTicketVM.To_Employee_Id,
+                    Employee_Id = employeeReciever.Id,
                     Ticket_Id = forwardTicketVM.Ticket_Id
                 });
 

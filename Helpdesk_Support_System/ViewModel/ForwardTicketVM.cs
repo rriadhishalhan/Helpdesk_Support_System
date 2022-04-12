@@ -8,6 +8,5 @@ namespace API.ViewModel
     public class ForwardTicketVM
     {
         public string Ticket_Id { get; set; }
-        public string To_Employee_Id { get; set; }
     }
 }
