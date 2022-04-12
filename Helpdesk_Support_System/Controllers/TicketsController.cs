@@ -141,7 +141,7 @@ namespace API.Controllers
 
                 if (result == -2)
                 {
-                    return NotFound("Employee not Found");
+                    return NotFound("No Employee is Vacant NOW");
                 }
 
                 if (result == 0)
