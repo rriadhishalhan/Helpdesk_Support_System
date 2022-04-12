@@ -1,20 +1,30 @@
 ﻿
-function dataDetailTicket(employeeId,TicketId, role) {
+function dataDetailTicket(employeeId, TicketId, role) {
+    console.log(role);
     $.ajax({
         type: "GET",
         async: false,
         url: "https://localhost:44376/API/tickets/" + TicketId,
         data: {}
     }).done((result) => {
-        console.log(result);
+        //console.log(result);
         $('#updateTicketId').html('<input id="FormUpdateTicketId" type="text" class="form-control input-group-sm" name="ticketId" placeholder="' + result.id + '" value="' + result.id + '" disabled>');
         $('#UpdateIssue').html(' <textarea id="FormUpdateIssue" class="form-control" rows="3" placeholder="' + result.issue + '" value="' + result.issue + '" disabled></textarea>');
-        var textBtn = `<button type="submit" class="btn btn-danger" onclick="EskalasiTicket('${employeeId}','${result.id}','${role}')" style="margin-right:8%"> Eskalasi </button>`;
-        textBtn += `<button type="submit" class="btn btn-success" onclick=""> Kirim </button>`;
-        console.log(textBtn);
-        $('#formBtn').html(textBtn);
+        if (role =="Server Engineer") {
+            var textBtn = `<button type="submit" class="btn btn-success" onclick=""> Kirim </button>`;
+            console.log(textBtn);
+            $('#formBtn').html(textBtn);
+        }
+        else {
+            var textBtn = `<button type="submit" class="btn btn-danger" onclick="EskalasiTicket('${employeeId}','${result.id}','${role}')" style="margin-right:8%" title="Tiket ini akan diserahkan ke Engineer"> Eskalasi </button>`;
+            textBtn += `<button type="submit" class="btn btn-success" onclick=""> Kirim </button>`;
+            console.log(textBtn);
+            $('#formBtn').html(textBtn);
+        }
 
-        if (role = "Admin") {
+
+
+        if (role == "Admin") {
             console.log("admin neh klik baris tiket");
 
             $('#updatePriority').html('<select id="FormSelectPriority" name="Priority" class="form-control "  ></select >');
@@ -34,6 +44,25 @@ function dataDetailTicket(employeeId,TicketId, role) {
                 console.log(err);
             });
 
+        }
+        else {
+            console.log("Developer neh klik baris tiket");
+            var strPriority;
+
+            switch (result.priority_Id) {
+                case 1:
+                    strPriority = "Low";
+                    break;
+                case 2:
+                    strPriority = "Medium";
+                    break;
+                case 3:
+                    strPriority = "High";
+                    break;
+            }
+            console.log(strPriority);
+
+            $('#updatePriority').html('<input id="FormSelectPriority" name="Priority" type="text" class="form-control input-group-sm"  placeholder="' + strPriority + '" value="' + strPriority + '" disabled>');
 
         }
 
@@ -42,83 +71,23 @@ function dataDetailTicket(employeeId,TicketId, role) {
     });
 }
 
-function getVacantEmployee(FromEmployeeId) {
-    console.log("Masuk Get Vacant");
-    $.ajax({
-        type: "GET",
-        async: false,
-        url: "https://localhost:44376/API/employees/" + FromEmployeeId,
-        data: {}
-    }).done((resultFromEmployee) => {
 
-        console.log("Masuk ajax get employee by id");
-        console.log(resultFromEmployee);
-
-        $.ajax({
-            type: "GET",
-            async: false,
-            url: "https://localhost:44376/API/employees",
-            data: {}
-        }).done((resultAllEmployee) => {
-
-            console.log("Masuk ajax get employee all");
-            var toEmployeeId = "";
-
-            for (var i = 0; i < resultAllEmployee.length; i++) {
-                console.log("MASUK FOR");
-                if (resultAllEmployee[i].id != resultFromEmployee.id &&
-                    resultAllEmployee[i].workload < 10 &&
-                    resultAllEmployee[i].position_id == resultFromEmployee.position_id + 1) {
-                    console.log("MASUK IF");
-
-                    toEmployeeId = resultAllEmployee[i].id;
-                    break;
-                }
-                else {
-                    console.log("MASUK ELSE");
-
-                }
-            };
-            console.log(toEmployeeId);
-            return toEmployeeId;
-
-
-        }).fail((err) => {
-            console.log(err);
-        });
-
-
-
-    }).fail((err) => {
-        console.log(err);
-    });
-}
 
 function EskalasiTicket(EmployeeId, TicketId, role) {
 
-    if (role = "Admin") {
+    let OpenTicket = new Object();
+    OpenTicket.Ticket_Id = TicketId;
+    OpenTicket.Opener_Employee_Id = EmployeeId;
+
+    let ForwardTicket = new Object();
+    ForwardTicket.Ticket_Id = TicketId;
+
+
+    if (role == "Admin") {
         console.log("masuk admin eskalasi");
         let Priority = new Object();
         Priority.Ticket_Id = TicketId;
         Priority.Priority_Id = Number($("#FormSelectPriority").val());
-
-        let OpenTicket = new Object();
-        OpenTicket.Ticket_Id = TicketId ;
-        OpenTicket.Opener_Employee_Id = EmployeeId;
-
-        let toEmployeeId;
-        try {
-            toEmployeeId = getVacantEmployee(EmployeeId);
-            console.log(toEmployeeId);
-
-        } catch (e) {
-            console.log(e);
-        }
-
-
-        let ForwardTicket = new Object();
-        ForwardTicket.Ticket_Id = TicketId;
-        ForwardTicket.To_Employee_Id = toEmployeeId;
 
 
         console.log("Object buat Priority"  );
@@ -128,57 +97,135 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
         console.log("Object buat Forward");
         console.log(ForwardTicket);
 
+        //START OF CHECK PRIOIRTY = NAN
+        if (!Number.isNaN(Priority.Priority_Id)) {
+            //START OF AJAX SET PRIORITY
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "PUT",
+                url: "https://localhost:44376/API/Tickets/setPriority",
+                dataType: "json",
+                data: JSON.stringify(Priority)
+            }).done((result) => {
+                console.log("sukses atur priority tiket")
+                //START OF AJAX OPEN TICKET
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    type: "POST",
+                    url: "https://localhost:44376/API/Tickets/open",
+                    dataType: "json",
+                    data: JSON.stringify(OpenTicket)
+                }).done((result) => {
 
-        //if (!Number.isNaN(Priority.Priority_Id)) {
-        //    $.ajax({
-        //        headers: {
-        //            'Accept': 'application/json',
-        //            'Content-Type': 'application/json'
-        //        },
-        //        type: "PUT",
-        //        url: "https://localhost:44376/API/Tickets/setPriority",
-        //        dataType: "json",
-        //        data: JSON.stringify(Priority)
-        //    }).done((result) => {
-        //        console.log("sukses atur priority tiket")
+                    console.log("sukses Membuka tiket")
+                    //START OF AJAX FORWARD TIKET
+                    $.ajax({
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        type: "POST",
+                        url: "https://localhost:44376/API/Tickets/forward",
+                        dataType: "json",
+                        data: JSON.stringify(ForwardTicket)
+                    }).done((result) => {
+                        console.log("sukses Meneruskan Tiket tiket");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Tiket berhasil diteruskan ke ' + result.employee_Id,
+                        }).then((result) => {
+                            window.location.reload();
+                        })
 
-        //        $.ajax({
-        //            headers: {
-        //                'Accept': 'application/json',
-        //                'Content-Type': 'application/json'
-        //            },
-        //            type: "POST",
-        //            url: "https://localhost:44376/API/Tickets/open",
-        //            dataType: "json",
-        //            data: JSON.stringify(OpenTicket)
-        //        }).done((result) => {
-        //            console.log("sukses Membuka tiket")
+                    }).fail((error) => {
+                        console.log(error);
+
+                    });
+                    //END OF AJAX FORWARD TIKET
 
 
+                }).fail((error) => {
+                    console.log(error);
 
-        //        }).fail((error) => {
-        //            console.log(error);
+                });
+                //END OF AJAX OPEN TICKET
 
-        //        })
+            }).fail((error) => {
+                //alert pemberitahuan jika gagal
+                console.log(error);
 
-        //    }).fail((error) => {
-        //        //alert pemberitahuan jika gagal
-        //        console.log(error);
-
-        //    })
-        //}
-        //else {
-        //    Swal.fire({
-        //        icon: 'error',
-        //        title: 'Oops...',
-        //        text: 'Priority belum dipilih, silahkan dicek kembali',
-        //        timer: 2000,
-        //    })
-        //}
-
+            });
+            //END OF AJAX SET PRIORITY
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Priority belum dipilih, silahkan dicek kembali',
+                timer: 2000,
+            })
+        }
+        //END OF CHECK PRIOIRTY = NAN
         
     }
     else {
+        console.log("masuk engineer eskalasi");
+
+        console.log("Object buat Open");
+        console.log(OpenTicket);
+        console.log("Object buat Forward");
+        console.log(ForwardTicket);
+
+        //START OF AJAX OPEN TICKET
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "POST",
+            url: "https://localhost:44376/API/Tickets/open",
+            dataType: "json",
+            data: JSON.stringify(OpenTicket)
+        }).done((result) => {
+
+            console.log("sukses Membuka tiket")
+            //START OF AJAX FORWARD TIKET
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "POST",
+                url: "https://localhost:44376/API/Tickets/forward",
+                dataType: "json",
+                data: JSON.stringify(ForwardTicket)
+            }).done((result) => {
+                console.log("sukses Meneruskan Tiket tiket");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Tiket berhasil diteruskan ke ' + result.employee_Id,
+                }).then((result) => {
+                    window.location.reload();
+                })
+
+            }).fail((error) => {
+                console.log(error);
+
+            });
+            //END OF AJAX FORWARD TIKET
+
+
+        }).fail((error) => {
+            console.log(error);
+
+        });
+        //END OF AJAX OPEN TICKET
 
     }
 }
