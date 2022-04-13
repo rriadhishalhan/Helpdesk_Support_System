@@ -215,6 +215,31 @@ namespace API.Controllers
             }
         }
 
+        [HttpPut("customerFeedback")]
+        public ActionResult CustomerFeedback(CustomerFeedbackVM customerFeedbackVM)
+        {
+            try
+            {
+                int result = ticketRepository.CustomerFeedback(customerFeedbackVM);
+
+                if (result == -1)
+                {
+                    return NotFound("Ticket not Found");
+                }
+
+                if (result == -2)
+                {
+                    return BadRequest("Feedback cant be null");
+                }
+
+                return Ok("Feedback Ticket Success");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                                  "FEEDBACK TICKET Server Error");
+            }
+        }
 
     }
 }

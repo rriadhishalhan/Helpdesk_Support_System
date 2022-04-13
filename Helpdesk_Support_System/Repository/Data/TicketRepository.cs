@@ -354,5 +354,44 @@ namespace API.Repository.Data
                 throw e;
             }
         }
+
+        public int CustomerFeedback(CustomerFeedbackVM customerFeedbackVM)
+        {
+            //check apakah id ticket yang dimasukan benar dan ada pada database
+            Ticket ticket = myContext.Tickets.Where(t => t.Id == customerFeedbackVM.Ticket_Id).FirstOrDefault();
+            if (ticket == null)
+            {
+                return -1;
+            }
+
+            //check apakah feedback yang diberikan kosong atau tidak
+            if (customerFeedbackVM.Feedback == null || customerFeedbackVM.Feedback == "")
+            {
+                return -2;
+            }
+
+            //mengambil data employee yang memberikan solusi pada ticket tersebut
+            Employee employee = (Employee)(from t in myContext.Tickets
+                                                 join th in myContext.TicketHistories on t.Id equals th.Ticket_Id
+                                                 join e in myContext.Employees on th.Employee_Id equals e.Id
+                                                 where th.Status == Status.Terjawab && th.Ticket_Id == customerFeedbackVM.Ticket_Id
+                                                 select e).Single();
+
+            //mengupdate kolom feedback pada table tb_m_tickets
+            ticket.Feedback = customerFeedbackVM.Feedback;
+            myContext.Tickets.Attach(ticket);
+            myContext.Entry(ticket).State = EntityState.Modified;
+
+            //membuat riwayat ticket yang berstatus tertutup
+            myContext.TicketHistories.Add(new TicketHistory
+            {
+                Status = Status.Ditutup,
+                Start_date = DateTime.Now,
+                Employee_Id = employee.Id,
+                Ticket_Id = customerFeedbackVM.Ticket_Id
+            });
+
+            return myContext.SaveChanges();
+        }
     }
 }
