@@ -26,7 +26,9 @@ function dataDetailTicket(employeeId, TicketId, role) {
         if (result.solution != null) {
             console.log("Masuk solution tidak null");
             $('#UpdateSolution').html(' <textarea  id="inputSolution" class="form-control" rows="3" placeholder="' + result.solution + '" value="' + result.solution + '" disabled></textarea>');
-
+            texBtnSolutionNotNull = `<button class="btn btn-secondary" type="button" data-bs-dismiss="modal" > Close </button>`;
+            console.log(texBtnSolutionNotNull);
+            $('#formBtn').html(texBtnSolutionNotNull);
         }
         else {
             console.log("Masuk solution null");
@@ -37,23 +39,45 @@ function dataDetailTicket(employeeId, TicketId, role) {
 
         if (role == "Admin") {
             console.log("admin neh klik baris tiket");
+            console.log(result.priority_Id);
+            if (result.priority_Id != null) {
+                console.log("masuk sini");
+                var strPriority;
 
-            $('#updatePriority').html('<select id="FormSelectPriority" name="Priority" class="form-control "  ></select >');
-            //BUAT SELECT OPTION PRIORITY
-            $.ajax({
-                type: "GET",
-                url: "https://localhost:44376/API/priorities",
-                data: {}
-            }).done((result) => {
-                var textPriorities = `<option value="hide" style="display: none;">Pick Priority</option>`;
-                $.each(result, function (key, val) {
+                switch (result.priority_Id) {
+                    case 1:
+                        strPriority = "Low";
+                        break;
+                    case 2:
+                        strPriority = "Medium";
+                        break;
+                    case 3:
+                        strPriority = "High";
+                        break;
+                }
+                console.log(strPriority);
 
-                    textPriorities += `<option value="${result[key].id}">${result[key].name}</option>`;
+                $('#updatePriority').html('<input id="FormSelectPriority" name="Priority" type="text" class="form-control input-group-sm"  placeholder="' + strPriority + '" value="' + strPriority + '" disabled>');
+            }
+            else {
+                $('#updatePriority').html('<select id="FormSelectPriority" name="Priority" class="form-control "  ></select >');
+                //BUAT SELECT OPTION PRIORITY
+                $.ajax({
+                    type: "GET",
+                    url: "https://localhost:44376/API/priorities",
+                    data: {}
+                }).done((result) => {
+                    var textPriorities = `<option value="hide" style="display: none;">Pick Priority</option>`;
+                    $.each(result, function (key, val) {
+
+                        textPriorities += `<option value="${result[key].id}">${result[key].name}</option>`;
+                    });
+                    $('#FormSelectPriority').html(textPriorities);
+                }).fail((err) => {
+                    console.log(err);
                 });
-                $('#FormSelectPriority').html(textPriorities);
-            }).fail((err) => {
-                console.log(err);
-            });
+            }
+           
 
         }
         else {
@@ -147,9 +171,10 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
                         data: JSON.stringify(ForwardTicket)
                     }).done((result) => {
                         console.log("sukses Meneruskan Tiket ");
+                        console.log(result);
                         Swal.fire({
                             icon: 'success',
-                            title: 'Tiket berhasil diteruskan ke ' + result.employee_Id,
+                            title: 'Tiket berhasil diteruskan ke ' + result.employee_Name + '( ' + result.employee_Position+' )',
                         }).then((result) => {
                             window.location.reload();
                         })
@@ -220,7 +245,7 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
                 console.log("sukses Meneruskan Tiket ");
                 Swal.fire({
                     icon: 'success',
-                    title: 'Tiket berhasil diteruskan ke ' + result.employee_Id,
+                    title: 'Tiket berhasil diteruskan ke ' + result.employee_Name + ' ( ' + result.employee_Position + ' )',
                 }).then((result) => {
                     window.location.reload();
                 })
@@ -259,62 +284,153 @@ function KirimSolusi(EmployeeId, TicketId, role) {
     console.log("Object buat Respond Ticket");
     console.log(solutionTicket);
 
-    if (solutionTicket.Solution != "") {
+    if (role == "Admin") {
+        console.log("masuk admin eskalasi");
+        let Priority = new Object();
+        Priority.Ticket_Id = TicketId;
+        Priority.Priority_Id = Number($("#FormSelectPriority").val());
 
-        //START OF AJAX OPEN TICKET
-        $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            type: "POST",
-            url: "https://localhost:44376/API/Tickets/open",
-            dataType: "json",
-            data: JSON.stringify(OpenTicket)
-        }).done((result) => {
+        console.log("Object buat Priority");
+        console.log(Priority);
 
-            console.log("sukses Membuka tiket")
-            //START OF AJAX RESPOND TIKET
+        //START OF CHECK PRIOIRTY = NAN
+        if (!Number.isNaN(Priority.Priority_Id)) {
+            //START OF AJAX SET PRIORITY
             $.ajax({
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 type: "PUT",
-                url: "https://localhost:44376/API/Tickets/respond",
+                url: "https://localhost:44376/API/Tickets/setPriority",
                 dataType: "json",
-                data: JSON.stringify(solutionTicket)
+                data: JSON.stringify(Priority)
             }).done((result) => {
-                console.log("sukses Memberikan Solusi pada tiket");
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil memberikan solusi pada Tiket',
-                }).then((result) => {
-                    window.location.reload();
-                })
+                console.log("sukses atur priority tiket")
+                //START OF AJAX OPEN TICKET
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    type: "POST",
+                    url: "https://localhost:44376/API/Tickets/open",
+                    dataType: "json",
+                    data: JSON.stringify(OpenTicket)
+                }).done((result) => {
+
+                    console.log("sukses Membuka tiket")
+                    //START OF AJAX RESPOND TIKET
+                    $.ajax({
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        type: "PUT",
+                        url: "https://localhost:44376/API/Tickets/respond",
+                        dataType: "json",
+                        data: JSON.stringify(solutionTicket)
+                    }).done((result) => {
+                        console.log("sukses Memberikan Solusi pada tiket");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil memberikan solusi pada Tiket',
+                        }).then((result) => {
+                            window.location.reload();
+                        })
+
+                    }).fail((error) => {
+                        console.log(error);
+
+                    });
+                    //END OF AJAX RESPOND TIKET
+
+
+                }).fail((error) => {
+                    console.log(error);
+
+                });
+            //END OF AJAX OPEN TICKET
+
+            }).fail((error) => {
+                //alert pemberitahuan jika gagal
+                console.log(error);
+
+            });
+            //END OF AJAX SET PRIORITY
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Priority belum dipilih, silahkan dicek kembali',
+                timer: 2000,
+            })
+        }
+        //END OF CHECK PRIOIRTY = NAN
+
+
+    }
+    else {
+        if (solutionTicket.Solution != "") {
+
+            //START OF AJAX OPEN TICKET
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "POST",
+                url: "https://localhost:44376/API/Tickets/open",
+                dataType: "json",
+                data: JSON.stringify(OpenTicket)
+            }).done((result) => {
+
+                console.log("sukses Membuka tiket")
+                //START OF AJAX RESPOND TIKET
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    type: "PUT",
+                    url: "https://localhost:44376/API/Tickets/respond",
+                    dataType: "json",
+                    data: JSON.stringify(solutionTicket)
+                }).done((result) => {
+                    console.log("sukses Memberikan Solusi pada tiket");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil memberikan solusi pada Tiket',
+                    }).then((result) => {
+                        window.location.reload();
+                    })
+
+                }).fail((error) => {
+                    console.log(error);
+
+                });
+                //END OF AJAX RESPOND TIKET
+
 
             }).fail((error) => {
                 console.log(error);
 
             });
-            //END OF AJAX RESPOND TIKET
+            //END OF AJAX OPEN TICKET
 
-
-        }).fail((error) => {
-            console.log(error);
-
-        });
-        //END OF AJAX OPEN TICKET
-
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Solusi belum diisi, silahkan dicek kembali',
+                timer: 2000,
+            })
+        }
     }
-    else {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Solusi belum diisi, silahkan dicek kembali',
-            timer: 2000,
-        })
-    }
+
+    
 
 };
 
