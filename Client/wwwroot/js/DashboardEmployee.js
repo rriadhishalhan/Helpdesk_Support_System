@@ -22,6 +22,17 @@ function dataDetailTicket(employeeId, TicketId, role) {
             $('#formBtn').html(textBtn);
         }
 
+        console.log(result.solution);
+        if (result.solution != null) {
+            console.log("Masuk solution tidak null");
+            $('#UpdateSolution').html(' <textarea  id="inputSolution" class="form-control" rows="3" placeholder="' + result.solution + '" value="' + result.solution + '" disabled></textarea>');
+
+        }
+        else {
+            console.log("Masuk solution null");
+            $('#UpdateSolution').html(' <textarea  id="inputSolution" class="form-control" rows="3"></textarea>');
+
+        }
 
 
         if (role == "Admin") {
