@@ -178,7 +178,7 @@ namespace API.Repository.Data
             }
         }
 
-        public string Forward(ForwardTicketVM forwardTicketVM)
+        public ForwardMessageVM Forward(ForwardTicketVM forwardTicketVM)
         {
             try
             {
@@ -189,7 +189,10 @@ namespace API.Repository.Data
                 Ticket ticket = myContext.Tickets.Where(t => t.Id == forwardTicketVM.Ticket_Id).FirstOrDefault();
                 if (ticket == null)
                 {
-                    return "-1";
+                    return new ForwardMessageVM {
+                        Status_Code = 404,
+                        Error_Message = "Ticket Not Found"
+                    };
                 }
 
                 //mendapatkan informasi terkait employee yang meneruskan ticket tersebut
@@ -213,7 +216,11 @@ namespace API.Repository.Data
                 //jika tidak ada employee yang sedang tidak sibuk
                 if (employeeReciever == null)
                 {
-                    return "-2";
+                    return new ForwardMessageVM
+                    {
+                        Status_Code = 404,
+                        Error_Message = "No Vacant Employee",
+                    };
                 }
 
                 //jika yang meneruskan ticket tidak bernilai null dan bukan merupakan admin
@@ -239,7 +246,13 @@ namespace API.Repository.Data
 
                 myContext.SaveChanges();
 
-                return employeeReciever.Id;
+                return new ForwardMessageVM
+                {
+                    Employee_Id = employeeReciever.Id,
+                    Employee_Name = $"{employeeReciever.First_name} {employeeReciever.Last_name}",
+                    Employee_Position = myContext.Positions.Where(p => p.Id == employeeReciever.Position_id).Single().Name,
+                    Status_Code = 200,
+                };
             } catch (Exception e)
             {
                 throw e;
@@ -353,6 +366,45 @@ namespace API.Repository.Data
             {
                 throw e;
             }
+        }
+
+        public int CustomerFeedback(CustomerFeedbackVM customerFeedbackVM)
+        {
+            //check apakah id ticket yang dimasukan benar dan ada pada database
+            Ticket ticket = myContext.Tickets.Where(t => t.Id == customerFeedbackVM.Ticket_Id).FirstOrDefault();
+            if (ticket == null)
+            {
+                return -1;
+            }
+
+            //check apakah feedback yang diberikan kosong atau tidak
+            if (customerFeedbackVM.Feedback == null || customerFeedbackVM.Feedback == "")
+            {
+                return -2;
+            }
+
+            //mengambil data employee yang memberikan solusi pada ticket tersebut
+            Employee employee = (Employee)(from t in myContext.Tickets
+                                                 join th in myContext.TicketHistories on t.Id equals th.Ticket_Id
+                                                 join e in myContext.Employees on th.Employee_Id equals e.Id
+                                                 where th.Status == Status.Terjawab && th.Ticket_Id == customerFeedbackVM.Ticket_Id
+                                                 select e).Single();
+
+            //mengupdate kolom feedback pada table tb_m_tickets
+            ticket.Feedback = customerFeedbackVM.Feedback;
+            myContext.Tickets.Attach(ticket);
+            myContext.Entry(ticket).State = EntityState.Modified;
+
+            //membuat riwayat ticket yang berstatus tertutup
+            myContext.TicketHistories.Add(new TicketHistory
+            {
+                Status = Status.Ditutup,
+                Start_date = DateTime.Now,
+                Employee_Id = employee.Id,
+                Ticket_Id = customerFeedbackVM.Ticket_Id
+            });
+
+            return myContext.SaveChanges();
         }
     }
 }
