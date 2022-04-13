@@ -90,17 +90,28 @@ function detailTicket(id, ticketId) {
             console.log("Masuk Ajax Get Ticket by ID nih ");
             $('#customerIssue').html('<h4 style="font-weight:bolder; line-height: 35px;">' + resultTicket.issue + '</h4>');
 
-            var textTicketSolutionDanFeedback = ``;
+
+
+            var textTicketSolution = ``;
+            var textTicketFeedback = ``;
             if (resultTicket.solution != null) {
-                textTicketSolutionDanFeedback += `<span>`;
-                textTicketSolutionDanFeedback += `Solusi dari kami`;
-                textTicketSolutionDanFeedback += `</span>`;
-                textTicketSolutionDanFeedback += `<div>`;
-                textTicketSolutionDanFeedback += `<h4 style="font-weight:bolder; line-height: 35px;">${resultTicket.solution}</h4>`;
-                textTicketSolutionDanFeedback += `</div>`;
+                textTicketSolution += `<Label>`;
+                textTicketSolution += `Solusi dari kami`;
+                textTicketSolution += `</Label>`;
+                textTicketSolution += `<div class="col-12">`;
+                textTicketSolution += `<h4 style="font-weight:bolder; line-height: 35px;">${resultTicket.solution}</h4>`;
+                textTicketSolution += `</div>`;
+
+                textTicketFeedback += `<Label>`;
+                textTicketFeedback += `Tanggapan kamu`;
+                textTicketFeedback += `</Label>`;
+                textTicketFeedback += `<div class="col-12">`;
+                textTicketFeedback += `<textarea id="inputFeedback" class="form-control" rows="3"></textarea>`;
+                textTicketFeedback += `</div>`;
 
             }
-            $('#soulutionAndFeedbackSection').html(textTicketSolutionDanFeedback);
+            $('#soulutionSection').html(textTicketSolution);
+            $('#feedbackSection').html(textTicketFeedback);
 
 
         }).fail((error) => {
@@ -113,10 +124,15 @@ function detailTicket(id, ticketId) {
 
         var currentIndex = 1;
         var textTicketHistories = ``;
+
+        console.log(result);
         //START OF LOOP TICKETHISTORIES
+        result.reverse();
+        console.log(result);
+
         $.each(result, function (key, val) {
 
-            if (currentIndex == result.length) {
+            if (currentIndex == 1) {
                 if (result[key].employee_position == null) {
                     textTicketHistories += `<tr>`;
                     textTicketHistories += `<td>${result[key].date}</td>`;
@@ -155,6 +171,8 @@ function detailTicket(id, ticketId) {
 
             //console.log(textTicketHistories);
         });
+
+        $('#customerStatus').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].status + '</h4>');
         //END OF LOOP TICKETHISTORIES
         $('#ticketHistoriesTableCustomer').html(textTicketHistories);
 
@@ -259,6 +277,23 @@ $(document).ready(function () {
 
 
 })
+
+
+
+$('#customerShowStatusDetail').click(function () {
+    $('#TableTrackHistories').slideDown(200);
+    $('#customerShowStatusDetail').hide(0);
+    $('#customerHideStatusDetail').show(0);
+});
+$('#customerHideStatusDetail').click(function () {
+    $('#TableTrackHistories').slideUp(200);
+    $('#customerShowStatusDetail').show(0);
+    $('#customerHideStatusDetail').hide(0);
+});
+
+
+
+
 //$(document).ready(function () {
 //    //BUAT SELECT OPTION ROLE
 //    $.ajax({

@@ -185,71 +185,125 @@
 
 <!--/////////////////////////////////// MODAL CEK TIKET HISTORIES /////////////////////////////////////////////////////////////////////-->
 <div class="modal fade" id="ModalTicketHistories" tabindex="-1" role="dialog" aria-labelledby="RiwayatTiket" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                @*<h4 class="modal-title">Lacak Tiketmu</h4>*@
+                <center>
+                    <h4 class="modal-title">Detail Tiketmu</h4>
+
+                </center>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body">
-                <center>
-                    <span>
-                        Dengan Nomor Tiket
-                    </span>
-                    <div id="customerTikcetId">
+            <div class="modal-body" >
+                <div class="container">
+                    <div class="row">
+                        <div class="col-10" style="height: 500px; overflow-y: auto; ">
+                            <div class="container">
 
-                    </div>
+                                <div class="row">
+                                    <label>
+                                        Nomor Tiket
 
-                </center>
+                                    </label>
+                                    <div class="col-12" id="customerTikcetId">
 
-                <center>
-                    <span>
-                        Keluhan kamu
-                    </span>
-                    <div id="customerIssue">
+                                    </div>
+                                </div>
 
-                    </div>
+                                <div class="row" style=" margin-top: 1%;">
 
-                </center>
+                                    <label>
+                                        Keluhan kamu
 
-                <center>
+                                    </label>
+                                    <div class="col-12" id="customerIssue" style=" margin-top: 1%;">
 
-                    <div id="soulutionAndFeedbackSection">
-                        <span>
-                            Solusi dari kami
-                        </span>
-                        <div id="customerSolution">
+                                    </div>
+                                </div>
+
+                                <div class="row" id="soulutionSection" style=" margin-top: 1%;">
+
+
+
+                                </div>
+
+
+                                <div class="row" id="feedbackSection" style=" margin-top: 1%;">
+
+                                   
+
+
+                                </div>
+
+
+                                <div class="row" style=" margin-top: 1%;">
+
+                                    <label>
+                                        Status Akhir
+
+                                    </label>
+                                    <div class="col-10" id="customerStatus">
+
+                                    </div>
+                                    <div class="col-2">
+                                        <div id="customerShowStatusDetail">
+                                            <span style="font-size:15px;color:forestgreen;font-weight:bolder">Show Detail <i data-feather="arrow-down" style="vertical-align: middle;"></i></span>
+
+                                        </div>
+                                        <div id="customerHideStatusDetail">
+                                            <span style="font-size:15px;color:forestgreen;font-weight:bolder">Hide Details <i data-feather="arrow-up" style="vertical-align: middle;"></i></span>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+
+                            </div>
+
+
+
+                            <div class="table-responsive" id="TableTrackHistories" style="padding-top:5%">
+                                <table class="table table-bordernone">
+                                    <thead style="text-align:center">
+                                        <tr>
+                                            @*<th scope="col">#</th>*@
+                                            <th scope="col">Tanggal</th>
+                                            <th scope="col"></th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ticketHistoriesTableCustomer" style="text-align:center">
+
+                                        <!--<tr>-->
+                                        <!--<th class="border-bottom-0" scope="row">1</th>-->
+                                                <!--<td>Mark</td>
+                                                <td>Otto</td>
+                                                <td>mdo</td>
+                                            </tr>-->
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
 
                         </div>
+
+                        <div class="col-2">
+                            <center>
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+
+                            </center>
+                        </div>
+
+
                     </div>
-
-
-                </center>
-
-                <div class="table-responsive" style="padding-top:5%">
-                    <table class="table table-bordernone">
-                        <thead style="text-align:center">
-                            <tr>
-                                @*<th scope="col">#</th>*@
-                                <th scope="col">Tanggal</th>
-                                <th scope="col"></th>
-                                <th scope="col">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ticketHistoriesTableCustomer" style="text-align:center">
-
-                            <tr>
-                                @*<th class="border-bottom-0" scope="row">1</th>*@
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>mdo</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
                 </div>
-
+               
 
             </div>
 
@@ -258,10 +312,9 @@
 
             <div class="modal-footer">
                         <div>
-                            <center>
-                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-
-                            </center>
+                                <span style="color:red;font-size:12px;align-items:center!important">
+                                    *Jika dalam 2 hari tiket sudah terjawab namun tidak menerima tanggapan balik. Tiket tersebut akan kami tutup.
+                                </span>
                             @*<button class="btn btn-primary" type="button">Save changes</button>*@
                         </div>
 
