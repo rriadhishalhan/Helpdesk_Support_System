@@ -68,6 +68,42 @@ function addTicket() {
     
 }
 
+function KirimFeedback(id, ticketId) {
+    console.log("Masuk ke kirim feedback");
+    
+
+    let feedbackTicket = new Object();
+    feedbackTicket.Ticket_Id = ticketId;
+    feedbackTicket.Feedback = $('#inputFeedback').val();
+    console.log(feedbackTicket);
+
+    //START OF AJAX FEEDBACK TIKET
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: "PUT",
+        url: "https://localhost:44376/API/Tickets/customerFeedback",
+        dataType: "json",
+        data: JSON.stringify(feedbackTicket)
+    }).done((result) => {
+        console.log("sukses Memberikan Solusi pada tiket");
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil menambahkan tanggapan pada Tiket',
+        }).then((result) => {
+            window.location.reload();
+        })
+
+    }).fail((error) => {
+        console.log(error);
+
+    });
+    //END OF AJAX FEEDBACK TIKET
+
+}
+
 function detailTicket(id, ticketId) {
     //console.log(ticketId)
     let textUrlDetail = "https://localhost:44376/API/Customers/" + id + "/tickets/" + ticketId +"/history";
@@ -94,25 +130,44 @@ function detailTicket(id, ticketId) {
 
             var textTicketSolution = ``;
             var textTicketFeedback = ``;
+            var textBtnFeedback = ``;
             if (resultTicket.solution != null) {
                 textTicketSolution += `<Label>`;
                 textTicketSolution += `Solusi dari kami`;
                 textTicketSolution += `</Label>`;
                 textTicketSolution += `<div class="col-12">`;
-                textTicketSolution += `<h4 style="font-weight:bolder; line-height: 35px;">${resultTicket.solution}</h4>`;
+                textTicketSolution += `<h4 style="font-weight:bolder; line-height: 35px;white-space: pre-wrap;" >${resultTicket.solution}</h4>`;
                 textTicketSolution += `</div>`;
 
                 textTicketFeedback += `<Label>`;
                 textTicketFeedback += `Tanggapan kamu`;
                 textTicketFeedback += `</Label>`;
                 textTicketFeedback += `<div class="col-12">`;
-                textTicketFeedback += `<textarea id="inputFeedback" class="form-control" rows="3"></textarea>`;
+                textTicketFeedback += `<textarea id="inputFeedback" class="form-control" rows="3" ></textarea>`;
                 textTicketFeedback += `</div>`;
 
+                textBtnFeedback += `<button type="submit" class="btn btn-success" onclick="KirimFeedback('${id}','${ticketId}')" title="Anda akan mengirimkan Feedback ke Pegawai kami"> Kirim </button>`
             }
             $('#soulutionSection').html(textTicketSolution);
             $('#feedbackSection').html(textTicketFeedback);
+            $('#btnGroupModal').html(textBtnFeedback);
 
+
+            if (resultTicket.feedback != null) {
+                console.log("masuk sini nih");
+                textBtnFeedback = ``
+                $('#btnGroupModal').html(textBtnFeedback);
+
+                textTicketFeedback = ``;
+                textTicketFeedback += `<Label>`;
+                textTicketFeedback += `Tanggapan kamu`;
+                textTicketFeedback += `</Label>`;
+                textTicketFeedback += `<div class="col-12">`;
+                textTicketFeedback += `<h4 style="font-weight:bolder; line-height: 35px;white-space: pre-wrap;" >${resultTicket.feedback}</h4>`;
+                textTicketFeedback += `</div>`;
+                $('#feedbackSection').html(textTicketFeedback);
+
+            }
 
         }).fail((error) => {
             console.log(error);
