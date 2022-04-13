@@ -132,19 +132,14 @@ namespace API.Controllers
         {
             try
             {
-                string result = ticketRepository.Forward(forwardTicketVM);
+                ForwardMessageVM result = ticketRepository.Forward(forwardTicketVM);
 
-                if (result == "-1")
+                if (result.Status_Code == 404)
                 {
-                    return NotFound("Ticket not Found");
+                    return NotFound(result);
                 }
 
-                if (result == "-2")
-                {
-                    return NotFound("No Employee is Vacant NOW");
-                }
-
-                return Ok(new { Message = "Forward Ticket Success", Employee_Id = result });
+                return Ok(result);
             }
             catch (Exception)
             {
