@@ -7,6 +7,7 @@ function dataDetailTicket(employeeId, TicketId, role) {
         url: "https://localhost:44376/API/tickets/" + TicketId,
         data: {}
     }).done((result) => {
+        //-------------START SHOW DETAIL----------------
         //console.log(result);
         $('#updateTicketId').html('<input id="FormUpdateTicketId" type="text" class="form-control input-group-sm" name="ticketId" placeholder="' + result.id + '" value="' + result.id + '" disabled>');
         $('#UpdateIssue').html(' <textarea id="FormUpdateIssue" class="form-control" rows="3" placeholder="' + result.issue + '" value="' + result.issue + '" disabled></textarea>');
@@ -33,7 +34,6 @@ function dataDetailTicket(employeeId, TicketId, role) {
         else {
             console.log("Masuk solution null");
             $('#UpdateSolution').html(' <textarea  id="inputSolution" class="form-control" rows="3"></textarea>');
-
         }
 
 
@@ -100,6 +100,45 @@ function dataDetailTicket(employeeId, TicketId, role) {
             $('#updatePriority').html('<input id="FormSelectPriority" name="Priority" type="text" class="form-control input-group-sm"  placeholder="' + strPriority + '" value="' + strPriority + '" disabled>');
 
         }
+        //====================END SHOW DETAIL==========================
+
+        //periksa apakah status ticket ini sudah open
+        $.ajax({
+            type: "GET",
+            async: false,
+            url: `https://localhost:44376/API/customers/${result.customer_Id}/tickets/${result.id}/history`,
+            data: {}
+        }).done((histories) => {
+            const historiesLength = histories.length;
+            const lastStatus = histories[historiesLength - 1].status;
+
+            if (lastStatus == "Diteruskan") {
+                //buat data untuk endpoint open ticket
+                let OpenTicket = new Object();
+                OpenTicket.Ticket_Id = TicketId;
+                OpenTicket.Opener_Employee_Id = employeeId;
+
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    type: "POST",
+                    url: "https://localhost:44376/API/Tickets/open",
+                    dataType: "json",
+                    data: JSON.stringify(OpenTicket)
+                }).done((openResult) => {
+                    console.log("TICKET OPENED");
+                    console.log(openResult);
+                }).fail((openError) => {
+                    console.log("OPEN TICKET FAIL");
+                    console.log(openError);
+                });
+            }
+        }).fail((historyError) => {
+            console.log("HISTORY ERROR");
+            console.log(historyError);
+        });
 
     }).fail((err) => {
         console.log(err);
@@ -147,18 +186,18 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
             }).done((result) => {
                 console.log("sukses atur priority tiket")
                 //START OF AJAX OPEN TICKET
-                $.ajax({
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    type: "POST",
-                    url: "https://localhost:44376/API/Tickets/open",
-                    dataType: "json",
-                    data: JSON.stringify(OpenTicket)
-                }).done((result) => {
+                //$.ajax({
+                //    headers: {
+                //        'Accept': 'application/json',
+                //        'Content-Type': 'application/json'
+                //    },
+                //    type: "POST",
+                //    url: "https://localhost:44376/API/Tickets/open",
+                //    dataType: "json",
+                //    data: JSON.stringify(OpenTicket)
+                //}).done((result) => {
 
-                    console.log("sukses Membuka tiket")
+                //    console.log("sukses Membuka tiket")
                     //START OF AJAX FORWARD TIKET
                     $.ajax({
                         headers: {
@@ -186,10 +225,10 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
                     //END OF AJAX FORWARD TIKET
 
 
-                }).fail((error) => {
-                    console.log(error);
+                //}).fail((error) => {
+                //    console.log(error);
 
-                });
+                //});
                 //END OF AJAX OPEN TICKET
 
             }).fail((error) => {
