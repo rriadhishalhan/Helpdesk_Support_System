@@ -68,7 +68,7 @@ function addTicket() {
     
 }
 
-function KirimFeedback(id, ticketId) {
+function KirimFeedback(ticketId) {
     console.log("Masuk ke kirim feedback");
     
 
@@ -146,7 +146,7 @@ function detailTicket(id, ticketId) {
                 textTicketFeedback += `<textarea id="inputFeedback" class="form-control" rows="3" ></textarea>`;
                 textTicketFeedback += `</div>`;
 
-                textBtnFeedback += `<button type="submit" class="btn btn-success" onclick="KirimFeedback('${id}','${ticketId}')" title="Anda akan mengirimkan Feedback ke Pegawai kami"> Kirim </button>`
+                textBtnFeedback += `<button type="submit" class="btn btn-success" onclick="KirimFeedback('${ticketId}')" title="Anda akan mengirimkan Feedback ke Pegawai kami"> Kirim </button>`
             }
             $('#soulutionSection').html(textTicketSolution);
             $('#feedbackSection').html(textTicketFeedback);
@@ -346,166 +346,3 @@ $('#customerHideStatusDetail').click(function () {
     $('#customerHideStatusDetail').hide(0);
 });
 
-
-
-
-//$(document).ready(function () {
-//    //BUAT SELECT OPTION ROLE
-//    $.ajax({
-//        type: "GET",
-//        url: "https://localhost:44368/roles/getall",
-//        data: {}
-//    }).done((result) => {
-//        var textRoles = `<option value="hide" style="display: none;">Pick role</option>`;
-//        $.each(result, function (key, val) {
-
-//            textRoles += `<option value="${result[key].id}">${result[key].jobRole}</option>`;
-//        });
-//        $('#inputRole').html(textRoles);
-//    }).fail((err) => {
-//        console.log(err);
-//    });
-//    //BUAT SELECT OPTION UNIVERSITAS
-//    $.ajax({
-//        type: "GET",
-//        url: "https://localhost:44368/universities/getall",
-//        data: {}
-//    }).done((result) => {
-//        var textUniversities = `<option value="hide" style="display: none;">Pick universities</option>`;
-//        $.each(result, function (key, val) {
-
-//            textUniversities += `<option value="${result[key].id}">${result[key].name}</option>`;
-//        });
-//        $('#inputUniversities').html(textUniversities);
-//    }).fail((err) => {
-//        console.log(err);
-//    });
-
-//    //BUAT COUNT GENDER
-//    $.ajax({
-//        type: "GET",
-//        url: "https://localhost:44368/employees/GetCountGender",
-//        data: {}
-//    }).done((result) => {
-        
-//        var options = {
-//            labels: [result[0].labels, result[1].labels],
-//            series: [result[0].series, result[1].series],
-//            colors: ['#2b5737','#691d57' ],
-//            chart: {
-//                height: 350,
-//                type: 'donut',
-//                width: '100%'
-//            }
-//        };
-
-//        var chart = new ApexCharts(document.querySelector("#pieChartGender"), options);
-//        chart.render();
-
-//    }).fail((err) => {
-//        console.log(err);
-//    });
-
-//    function getLabelsUniv(univs) {
-//        var labels = [];
-
-//        for (var i = 0; i < univs.length; i++) {
-//            labels.push(univs[i].labels);
-//        }
-
-//        return labels;
-//    }
-//    function getSeriesUniv(univs) {
-//        var series = [];
-//        for (var i = 0; i < univs.length; i++) {
-//            series.push(univs[i].series);
-
-//        }
-//        return series;
-//    }
-
-//    //BUAT COUNT UNIVERSITIES
-//    $.ajax({
-//        type: "GET",
-//        url: "https://localhost:44368/employees/GetCountUniversities",
-//        data: {}
-//    }).done((result) => {
-
-//        var options = {
-//            xaxis: {
-//                categories: getLabelsUniv(result),
-//                tickAmount: 1
-//            },
-//            series: [{
-//                name: [
-//                    "People count"
-//                ],
-//                data: getSeriesUniv(result)
-//            }],
-//            plotOptions: {
-//                bar: {
-//                    borderRadius: 4,
-//                    horizontal: true,
-//                }
-//            },
-
-//            //colors: ['#2b5737', '#691d57'],
-//            chart: {
-//                height: 350,
-//                type: 'bar',
-//                width: '100%'
-//            },
-            
-//        };
-
-//        var chart = new ApexCharts(document.querySelector("#chartUniversities"), options);
-//        chart.render();
-
-//    }).fail((err) => {
-//        console.log(err);
-//    });
-
-
-//    //BUAT DATATABLE
-//    $("#employeeDatatable").DataTable({
-//        responsive: true,
-//        dom: 'Bfrtip',
-//        buttons: [
-//            {
-//                extend: 'excel',
-//                exportOptions: {
-//                    columns:[0,1,2,3,4,5]
-//                }
-//            }
-//        ],
-//        "ajax": {
-//            "url": "https://localhost:44368/employees/GetAllProfile",
-//            "dataSrc":"",
-//        },
-//        "columns": [
-//            //{
-//            //    "data": null, "sortable": false,
-//            //    render: function (data, type, row, meta) {
-//            //        return meta.row + meta.settings._iDisplayStart + 1;
-//            //    }
-//            //},
-//            { "data": "nik" },
-//            { "data": "fullname" },
-//            { "data": "role" },
-//            { "data": "email" },
-//            { "data": "phone" },
-//            { "data": "gender" },
-//            {
-//                "data": null,
-//                render: function (data, type, row) {
-//                    var btnDetail = `<button onclick="detailEmployee(${data.nik})" data-target="#DetailDataModal" data-toggle="modal" class="btn btn-info"  title="Show Detail"> <i class="fa fa-info" aria-hidden="true"></i></button>`;
-//                    var btnUpdate = `<button onclick="dataUpdate(${data.nik})" data-target="#UpdateDataModal"  data-toggle="modal" class="btn btn-warning" title="Update Data" style="color:white"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button >`;
-//                    var btnDelete = `<button onclick="deleteEmployee(${data.nik})" class="btn btn-danger"  title="Delete"> <i class="fa fa-trash-o" aria-hidden="true"></i></button >`;
-//                    return btnDetail+` ` + btnUpdate+` ` +btnDelete;
-//                }
-//            },
-
-//        ],
-        
-//    });
-//})
