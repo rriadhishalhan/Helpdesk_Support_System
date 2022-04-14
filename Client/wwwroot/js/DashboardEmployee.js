@@ -185,19 +185,7 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
                 data: JSON.stringify(Priority)
             }).done((result) => {
                 console.log("sukses atur priority tiket")
-                //START OF AJAX OPEN TICKET
-                //$.ajax({
-                //    headers: {
-                //        'Accept': 'application/json',
-                //        'Content-Type': 'application/json'
-                //    },
-                //    type: "POST",
-                //    url: "https://localhost:44376/API/Tickets/open",
-                //    dataType: "json",
-                //    data: JSON.stringify(OpenTicket)
-                //}).done((result) => {
-
-                //    console.log("sukses Membuka tiket")
+               
                     //START OF AJAX FORWARD TIKET
                     $.ajax({
                         headers: {
@@ -213,7 +201,7 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
                         console.log(result);
                         Swal.fire({
                             icon: 'success',
-                            title: 'Tiket berhasil diteruskan ke ' + result.employee_Name + '( ' + result.employee_Position+' )',
+                            title: 'Tiket berhasil diteruskan ke ' + result.employee_Name + '\n ( ' + result.employee_Position+' )',
                         }).then((result) => {
                             window.location.reload();
                         })
@@ -225,11 +213,7 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
                     //END OF AJAX FORWARD TIKET
 
 
-                //}).fail((error) => {
-                //    console.log(error);
-
-                //});
-                //END OF AJAX OPEN TICKET
+              
 
             }).fail((error) => {
                 //alert pemberitahuan jika gagal
@@ -257,19 +241,7 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
         console.log("Object buat Forward");
         console.log(ForwardTicket);
 
-        //START OF AJAX OPEN TICKET
-        $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            type: "POST",
-            url: "https://localhost:44376/API/Tickets/open",
-            dataType: "json",
-            data: JSON.stringify(OpenTicket)
-        }).done((result) => {
 
-            console.log("sukses Membuka tiket")
             //START OF AJAX FORWARD TIKET
             $.ajax({
                 headers: {
@@ -284,7 +256,7 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
                 console.log("sukses Meneruskan Tiket ");
                 Swal.fire({
                     icon: 'success',
-                    title: 'Tiket berhasil diteruskan ke ' + result.employee_Name + ' ( ' + result.employee_Position + ' )',
+                    title: 'Tiket berhasil diteruskan ke ' + result.employee_Name + '\n ( ' + result.employee_Position + ' )',
                 }).then((result) => {
                     window.location.reload();
                 })
@@ -295,12 +267,6 @@ function EskalasiTicket(EmployeeId, TicketId, role) {
             });
             //END OF AJAX FORWARD TIKET
 
-
-        }).fail((error) => {
-            console.log(error);
-
-        });
-        //END OF AJAX OPEN TICKET
 
     }
 }
@@ -346,19 +312,7 @@ function KirimSolusi(EmployeeId, TicketId, role) {
                 data: JSON.stringify(Priority)
             }).done((result) => {
                 console.log("sukses atur priority tiket")
-                //START OF AJAX OPEN TICKET
-                $.ajax({
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    type: "POST",
-                    url: "https://localhost:44376/API/Tickets/open",
-                    dataType: "json",
-                    data: JSON.stringify(OpenTicket)
-                }).done((result) => {
-
-                    console.log("sukses Membuka tiket")
+               
                     //START OF AJAX RESPOND TIKET
                     $.ajax({
                         headers: {
@@ -385,11 +339,6 @@ function KirimSolusi(EmployeeId, TicketId, role) {
                     //END OF AJAX RESPOND TIKET
 
 
-                }).fail((error) => {
-                    console.log(error);
-
-                });
-            //END OF AJAX OPEN TICKET
 
             }).fail((error) => {
                 //alert pemberitahuan jika gagal
@@ -413,19 +362,7 @@ function KirimSolusi(EmployeeId, TicketId, role) {
     else {
         if (solutionTicket.Solution != "") {
 
-            //START OF AJAX OPEN TICKET
-            $.ajax({
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                type: "POST",
-                url: "https://localhost:44376/API/Tickets/open",
-                dataType: "json",
-                data: JSON.stringify(OpenTicket)
-            }).done((result) => {
-
-                console.log("sukses Membuka tiket")
+         
                 //START OF AJAX RESPOND TIKET
                 $.ajax({
                     headers: {
@@ -451,12 +388,6 @@ function KirimSolusi(EmployeeId, TicketId, role) {
                 });
                 //END OF AJAX RESPOND TIKET
 
-
-            }).fail((error) => {
-                console.log(error);
-
-            });
-            //END OF AJAX OPEN TICKET
 
         }
         else {
