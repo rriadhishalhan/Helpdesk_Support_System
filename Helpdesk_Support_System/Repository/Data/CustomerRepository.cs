@@ -119,14 +119,16 @@ namespace API.Repository.Data
             var customerTickets = (from c in myContext.Customers
                                    join t in myContext.Tickets on c.Id equals t.Customer_Id
                                    join ctgs in myContext.Categories on t.Category_Id equals ctgs.Id
-                                   where t.Customer_Id == customerId
+                                   join th in myContext.TicketHistories on t.Id equals th.Ticket_Id
+                                   where t.Customer_Id == customerId && th.Start_date == myContext.TicketHistories.Where(thn => thn.Ticket_Id == t.Id).Max(thn => thn.Start_date)
                                    select new
                                    {
                                        Ticket_Id = t.Id,
                                        Category = ctgs.Name,
                                        Issue = t.Issue,
                                        Solution = t.Solution,
-                                       Feedback = t.Feedback
+                                       Feedback = t.Feedback,
+                                       Status = th.Status,
                                    }).ToList();
             return customerTickets;
         }
