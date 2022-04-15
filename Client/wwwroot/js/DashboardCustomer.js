@@ -77,30 +77,45 @@ function KirimFeedback(ticketId) {
     feedbackTicket.Feedback = $('#inputFeedback').val();
     console.log(feedbackTicket);
 
-    //START OF AJAX FEEDBACK TIKET
-    $.ajax({
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        type: "PUT",
-        url: "https://localhost:44376/API/Tickets/customerFeedback",
-        dataType: "json",
-        data: JSON.stringify(feedbackTicket)
-    }).done((result) => {
-        console.log("sukses Memberikan Solusi pada tiket");
+    //CEK KALO FEEDBACK KOSONG
+    if (feedbackTicket.Feedback != "") {
+        //START OF AJAX FEEDBACK TIKET
+
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "PUT",
+            url: "https://localhost:44376/API/Tickets/customerFeedback",
+            dataType: "json",
+            data: JSON.stringify(feedbackTicket)
+        }).done((result) => {
+            console.log("sukses Memberikan Solusi pada tiket");
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil menambahkan tanggapan pada Tiket',
+            }).then((result) => {
+                window.location.reload();
+            })
+
+        }).fail((error) => {
+            console.log(error);
+
+        });
+
+        //END OF AJAX FEEDBACK TIKET
+    }
+    else {
         Swal.fire({
-            icon: 'success',
-            title: 'Berhasil menambahkan tanggapan pada Tiket',
-        }).then((result) => {
-            window.location.reload();
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Tanggapanmu masih kosong, harap dicek kembali',
+            timer: 2000,
         })
-
-    }).fail((error) => {
-        console.log(error);
-
-    });
-    //END OF AJAX FEEDBACK TIKET
+    }
+    //END CEK FEEDBACK KOSONG
+  
 
 }
 
@@ -248,6 +263,21 @@ objSession.Email = $("#hdnSessionEmail").data('value');
 objSession.Role = $("#hdnSessionRole").data('value');
 console.log(objSession);
 
+const colors = {
+    0: '#d18400',
+    1: '#a8910c',
+    2: '#2e47ab',
+    3: '#00960f',
+    4: '#9c9c9c'
+};
+const statusTypes = {
+    0: "Terkirim",
+    1: "Diteruskan",
+    2: "Dibuka",
+    3: "Terjawab",
+    4: "Ditutup"
+};
+
 
 $(document).ready(function () {
 
@@ -270,6 +300,14 @@ $(document).ready(function () {
             { "data": "ticket_Id" },
             { "data": "category" },
             { "data": "issue" },
+            {
+                "data": null,
+                render: function (data, type, row) {
+                    var statusBadge = `<span class="badge badge-primary" style="background-color:${colors[data.status]}!important;color:white">${statusTypes[data.status]}</span>`;
+
+                    return statusBadge;
+                }
+            },
             {
                 "data": null,
                 render: function (data, type, row) {
