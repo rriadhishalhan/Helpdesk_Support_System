@@ -450,9 +450,77 @@ $(document).ready(function () {
         console.log(err);
     });
 
+    //GET COUNT TOTAL KELUHAN
+    $.ajax({
+        type: "GET",
+        async: false,
+        url: "https://localhost:44376/API/Tickets/countTicket",
+        data: {}
+    }).done((resultTicketTotal) => {
 
+        var textTicketTotal = ``;
+        textTicketTotal += `<h4 class="mb-0 counter" style=" font-size: 42px;">${resultTicketTotal}</h4>`;
 
+        console.log(textTicketTotal);
 
+        $('#keluhanTotal').html(textTicketTotal);
+    }).fail((err) => {
+        console.log(err);
+    });
+
+    //GET COUNT TOTAL CUSTOMER
+    $.ajax({
+        type: "GET",
+        async: false,
+        url: "https://localhost:44376/API/Customers/countCustomer",
+        data: {}
+    }).done((resultCustomerTotal) => {
+
+        var textCustomerTotal = ``;
+        textCustomerTotal += `<h4 class="mb-0 counter" style=" font-size: 42px;">${resultCustomerTotal}</h4>`;
+
+        console.log(textCustomerTotal);
+
+        $('#penggunaTotal').html(textCustomerTotal);
+    }).fail((err) => {
+        console.log(err);
+    });
+
+    //GET COUNT TOTAL KELUHAN DIPROSES
+    $.ajax({
+        type: "GET",
+        async: false,
+        url: "https://localhost:44376/API/Tickets/countProcessTicket",
+        data: {}
+    }).done((resultTicketProcess) => {
+
+        var textTicketProcess = ``;
+        textTicketProcess += `<h4 class="mb-0 counter" style=" font-size: 42px;">${resultTicketProcess}</h4>`;
+
+        console.log(textTicketProcess);
+
+        $('#keluhanDiproses').html(textTicketProcess);
+    }).fail((err) => {
+        console.log(err);
+    });
+
+    //GET COUNT TOTAL KELUHAN DITUTUP
+    $.ajax({
+        type: "GET",
+        async: false,
+        url: "https://localhost:44376/API/Tickets/countClosedTicket",
+        data: {}
+    }).done((resultTicketClosed) => {
+
+        var textTicketClosed = ``;
+        textTicketClosed += `<h4 class="mb-0 counter" style=" font-size: 42px;">${resultTicketClosed}</h4>`;
+
+        console.log(textTicketClosed);
+
+        $('#keluhanDitutup').html(textTicketClosed);
+    }).fail((err) => {
+        console.log(err);
+    });
 
 })
 
