@@ -1,5 +1,6 @@
 ﻿using API.Context;
 using API.Models;
+using API.Utils;
 using API.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -359,6 +360,23 @@ namespace API.Repository.Data
                     Employee_Id = respondTicketVM.Employee_Id,
                     Ticket_Id = respondTicketVM.Ticket_Id
                 });
+
+                //mengambil email dari customer
+                string customerId = myContext.Tickets.Where(t => t.Id == respondTicketVM.Ticket_Id).Single().Customer_Id;
+                string customerEmail = myContext.Customers.Where(c => c.Id == customerId).Single().Email;
+
+                //persiapan mengirim email
+                string receiverEmail = customerEmail;
+                string subject = $"Ticket Keluhan No. {ticket.Id} Telah Terjawab";
+                string body = $"Keluhan pada Ticket No. {ticket.Id} telah dijawab oleh {employeeResponder.First_name} {employeeResponder.Last_name}.\n" +
+                    $"Keluhan dijawab pada tanggal {DateTime.Now.ToString()}. Berikut Solusi yang berikan:\n" +
+                    $"{respondTicketVM.Solution}\n\n" +
+                    $"Silahkan kirimkan Feedback anda pada sistem untuk menutup Ticket ini.\nTicket akan ditutup oleh kami dalam waktu 2 hari.";
+
+                //mengirim email
+                Email email = new Email(receiverEmail);
+                email.Create(subject, body);
+                email.Send();
 
                 return myContext.SaveChanges();
             }

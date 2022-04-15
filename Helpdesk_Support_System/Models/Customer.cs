@@ -20,6 +20,9 @@ namespace API.Models
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
+        public int OTP { get; set; }
+        public DateTime ExpiredDate { get; set; }
+        public bool IsUsed { get; set; }
 
         [Required]
         public string Phone_number { get; set; }

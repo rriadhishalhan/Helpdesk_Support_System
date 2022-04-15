@@ -1,6 +1,12 @@
 ﻿using API.Context;
 using API.Models;
+using API.Utils;
 using API.ViewModel;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.EntityFrameworkCore;
+using MimeKit;
+using MimeKit.Text;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -78,6 +84,35 @@ namespace API.Repository.Data
             return 0;
         }
 
+        public int ForgotPassword(ForgotPasswordVM forgotPasswordVM)
+        {
+            //periksa apakah email tersebut terdapat pada table customer
+            Customer customer = myContext.Customers.Where(c => c.Email == forgotPasswordVM.Email).FirstOrDefault();
+            if (customer == null)
+            {
+                return -1; // email tidak terdaftar
+            }
+
+            //update data otp, expiredDate dan IsUsed pada customer
+            customer.OTP = new Random().Next(100000, 1000000); //Generate OTP from random number
+            customer.ExpiredDate = DateTime.Now.AddMinutes(5);
+            customer.IsUsed = false;
+            myContext.Attach(customer);
+            myContext.Entry(customer).State = EntityState.Modified;
+            myContext.SaveChanges();
+
+            //persiapan mengirim email
+            string receiverEmail = forgotPasswordVM.Email;
+            string subject = "Forgot Password OTP";
+            string body = $"Email: {customer.Email}\nOTP: {customer.OTP}\nExpired Date: {customer.ExpiredDate.ToString()}";
+
+            //mengirim email
+            Email email = new Email(receiverEmail);
+            email.Create(subject, body);
+            email.Send();
+
+            return 1; //sukses
+        }
 
         public ICollection CustomerTickets(string customerId)
         {
@@ -139,6 +174,24 @@ namespace API.Repository.Data
 
             //jika memiliki last_name, maka concat dengan first_name
             return cust.Id;
+        }
+
+        private void SendEmail(string email, int otp, DateTime expired)
+        {
+            MimeMessage mimeMessage = new MimeMessage();
+            mimeMessage.From.Add(new MailboxAddress("Justice Kutch", "justice.kutch78@ethereal.email"));
+            mimeMessage.To.Add(MailboxAddress.Parse(email));
+            mimeMessage.Subject = "Forgot Password OTP";
+            mimeMessage.Body = new TextPart(TextFormat.Plain)
+            {
+                Text = $"Email: {email}\nOTP: {otp}\nExpired Date: {expired.ToString()}"
+            };
+
+            SmtpClient smtp = new SmtpClient();
+            smtp.Connect("smtp.ethereal.email", 587, SecureSocketOptions.StartTls);
+            smtp.Authenticate("justice.kutch78@ethereal.email", "6X2pgyhHz6KDnx9m5J");
+            smtp.Send(mimeMessage);
+            smtp.Disconnect(true);
         }
 
     }

@@ -106,6 +106,27 @@ namespace API.Controllers
             }
         }
 
+        [HttpPost("forgotpassword")]
+        public ActionResult ForgotPassword(ForgotPasswordVM forgotPasswordVM)
+        {
+            try
+            {
+                int result = customerRepository.ForgotPassword(forgotPasswordVM);
+
+                if (result == -1)
+                {
+                    return NotFound("Email is not registered");
+                }
+
+                return Ok($"OTP Sent to {forgotPasswordVM.Email}");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "FORGOT PASSWORD Server Error");
+            }
+        }
+
         [HttpGet("{customerId}/tickets")]
         public ActionResult CustomerTickets(string customerId)
         {
