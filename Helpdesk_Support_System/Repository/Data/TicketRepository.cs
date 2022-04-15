@@ -424,5 +424,41 @@ namespace API.Repository.Data
 
             return myContext.SaveChanges();
         }
+
+        public int CountTicket()
+        {
+            var dataTicket =
+            (
+                from t in myContext.Tickets 
+                select t.Id
+            ).Count();
+
+            return dataTicket;
+        }
+
+        public int CountProcessTicket()
+        {
+            var dataProcessTicket =
+            (
+                from t in myContext.Tickets
+                where t.Feedback == null
+                select t.Id
+            ).Count();
+
+            return dataProcessTicket;
+        }
+
+        public int CountClosedTicket()
+        {
+            var dataClosedTicket =
+            (
+                from t in myContext.Tickets
+                where t.Feedback != null
+                select t.Id
+            ).Count();
+
+            return dataClosedTicket;
+        }
+
     }
 }

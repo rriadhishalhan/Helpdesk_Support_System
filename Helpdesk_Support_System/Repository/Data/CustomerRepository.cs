@@ -194,5 +194,16 @@ namespace API.Repository.Data
             smtp.Disconnect(true);
         }
 
+        public int CountCustomer()
+        {
+            var dataCustomer =
+            (
+                from c in myContext.Customers
+                select c.Id
+            ).Count();
+
+            return dataCustomer;
+        }
+
     }
 }

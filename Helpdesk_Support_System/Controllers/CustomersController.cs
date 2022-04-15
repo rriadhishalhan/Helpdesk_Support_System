@@ -157,5 +157,20 @@ namespace API.Controllers
                     "CUSTOMER TICKET HISTORY Server Error");
             }
         }
+
+        [HttpGet("countCustomer")]
+        public ActionResult CountCustomer()
+        {
+            try
+            {
+                var countCustomer = customerRepository.CountCustomer();
+                return Ok(countCustomer);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "COUNT DATA CUSTOMER Server Error");
+            }
+        }
     }
 }

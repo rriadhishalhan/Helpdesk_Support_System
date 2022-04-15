@@ -236,5 +236,49 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("countTicket")]
+        public ActionResult CountTicket()
+        {
+            try
+            {
+                var countTicket = ticketRepository.CountTicket();
+                return Ok(countTicket);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "COUNT DATA TICKET Server Error");
+            }
+        }
+
+        [HttpGet("countProcessTicket")]
+        public ActionResult CountProcessTicket()
+        {
+            try
+            {
+                var countProcessTicket = ticketRepository.CountProcessTicket();
+                return Ok(countProcessTicket);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "COUNT DATA PROCESS TICKET Server Error");
+            }
+        }
+
+        [HttpGet("countClosedTicket")]
+        public ActionResult CountClosedTicket()
+        {
+            try
+            {
+                var countClosedTicket = ticketRepository.CountClosedTicket();
+                return Ok(countClosedTicket);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "COUNT DATA CLOSED TICKET Server Error");
+            }
+        }
     }
 }
