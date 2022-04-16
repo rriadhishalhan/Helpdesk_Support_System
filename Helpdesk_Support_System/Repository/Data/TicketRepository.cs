@@ -406,7 +406,7 @@ namespace API.Repository.Data
                                                  join th in myContext.TicketHistories on t.Id equals th.Ticket_Id
                                                  join e in myContext.Employees on th.Employee_Id equals e.Id
                                                  where th.Status == Status.Terjawab && th.Ticket_Id == customerFeedbackVM.Ticket_Id
-                                                 select e).Single();
+                                                 select e).First();
 
             //mengupdate kolom feedback pada table tb_m_tickets
             ticket.Feedback = customerFeedbackVM.Feedback;
