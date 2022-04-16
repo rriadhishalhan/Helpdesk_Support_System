@@ -55,7 +55,7 @@
 
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header" style="padding-bottom:10px">
                         <h3>Daftar Keluhanmu</h3>
                         <p>
                             Dibawah ini merupakan daftar tiket keluhanmu, jangan khawatir tiketmu akan segera kami proses.
@@ -66,14 +66,14 @@
                         <input type="hidden" id="hdnSessionRole" data-value="@HttpContextAccessor.HttpContext.Session.GetString("Role")" />
 
                     </div>
-                    <div class="card-block row" style="padding:40px 10px 40px 10px">
+                    <div class="card-block row" style="padding:25px 10px 40px 10px">
                         <div class="col-sm-12 col-lg-12 col-xl-12">
                             <div class="table-responsive" >
                                 <table class="hover" id="ticketDataTable">
                                     <thead class="bg-primary" style="text-align:center">
                                         <tr>
                                             <th scope="col">#</th>
-                                            <th scope="col">Ticket Id</th>
+                                            <th scope="col">Ticket Number</th>
                                             <th scope="col">Category</th>
                                             <th scope="col">Issue</th>
                                             <th scope="col">Status</th>

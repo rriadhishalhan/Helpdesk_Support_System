@@ -394,7 +394,7 @@ function KirimSolusi(EmployeeId, TicketId, role) {
 
     //KALAU ADMIN DICEK DULU PRIORITY SUDAH DIISI ATAU BELUM
     if (role == "Admin") {
-        console.log("masuk admin eskalasi");
+        console.log("masuk admin kirim solusi");
         let Priority = new Object();
         Priority.Ticket_Id = TicketId;
         Priority.Priority_Id = Number($("#FormSelectPriority").val());
