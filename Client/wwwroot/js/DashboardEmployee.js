@@ -11,7 +11,9 @@ function dataDetailTicket(employeeId, TicketId, role) {
         //console.log(result);
         $('#updateTicketId').html('<input id="FormUpdateTicketId" type="text" class="form-control input-group-sm" name="ticketId" placeholder="' + result.id + '" value="' + result.id + '" disabled>');
         $('#UpdateIssue').html(' <textarea id="FormUpdateIssue" class="form-control" rows="3" placeholder="' + result.issue + '" value="' + result.issue + '" disabled></textarea>');
-        if (role =="Server Engineer") {
+
+        //KALO ROLE SERVER ENGINEER GAUSAH ADA TOMBOL ESKALASI
+        if (role == "Server Engineer") {
             var textBtn = `<button type="submit" class="btn btn-success" onclick="KirimSolusi('${employeeId}','${result.id}','${role}')" title="Anda akan mengirimkan solusi ke customer"> Kirim </button>`;
             console.log(textBtn);
             $('#formBtn').html(textBtn);
@@ -23,18 +25,70 @@ function dataDetailTicket(employeeId, TicketId, role) {
             $('#formBtn').html(textBtn);
         }
 
+
+        //CEK KALO SOLUTION GAK NULL TEXT AREA DISABLED
         console.log(result.solution);
         if (result.solution != null) {
             console.log("Masuk solution tidak null");
             $('#UpdateSolution').html(' <textarea  id="inputSolution" class="form-control" rows="3" placeholder="' + result.solution + '" value="' + result.solution + '" disabled></textarea>');
-            texBtnSolutionNotNull = `<button class="btn btn-secondary" type="button" data-bs-dismiss="modal" > Close </button>`;
-            console.log(texBtnSolutionNotNull);
-            $('#formBtn').html(texBtnSolutionNotNull);
+            //texBtnSolutionNotNull = `<button class="btn btn-secondary" type="button" data-bs-dismiss="modal" > Close </button>`;
+            //console.log(texBtnSolutionNotNull);
+            //$('#formBtn').html(texBtnSolutionNotNull);
+
+            //CEK KALO CUSTOMER UDAH KASIH FEEDBACK ATAU BELUM, KALO FEEDBACK == NULL ADMIN BISA TUTUP TIKETNYA
+            console.log(result.feedback);
+            if (result.feedback == null) {
+                console.log("Masuk Customer belum kasih feedback");
+                texBtnSolutionNotNull = `<button type="submit" class="btn btn-danger" onclick="TutupTiket('${TicketId}')" title="Anda akan menutup tiket ini"> Tutup Tiket </button>`;
+                console.log(texBtnSolutionNotNull);
+
+                $('#formBtn').html(texBtnSolutionNotNull);
+            }
+            else {
+                console.log("Masuk Customer udah kasih feedback");
+                texBtnSolutionNotNull = `<h4>Tiket sudah ditutup</h4>`
+
+                $('#formBtn').html(texBtnSolutionNotNull);
+
+            }
+            //END CEK CUSTOMER FEEDBACK
+
         }
         else {
             console.log("Masuk solution null");
             $('#UpdateSolution').html(' <textarea  id="inputSolution" class="form-control" rows="3"></textarea>');
         }
+        // END CEK KALO SOLUTION GAK NULL TEXT AREA DISABLED
+
+       
+
+        //var TicketHistoriesUrl = "https://localhost:44376/API/Customers/" + result.customer_Id + "/tickets/" + TicketId + "/history";
+        //console.log(TicketHistoriesUrl);
+
+        ////GET TICKET HISTORIES
+        //$.ajax({
+        //    type: "GET",
+        //    async: false,
+        //    url: TicketHistoriesUrl,
+        //    data: {}
+        //}).done((resultTicketHistories) => {
+        //    //var currentDate = new Date;
+        //    //resultTicketHistories.reverse();
+        //    //console.log(currentDate);
+        //    //console.log(resultTicketHistories[0].date);
+        //    //if (curentDate > resultTicketHistories[0].date) {
+        //    //    console.log("Masuk")
+        //    //}
+
+        //}).fail((err) => {
+        //    console.log(err);
+        //});
+        //END GET TICKET HISTORIES
+
+
+
+
+     
 
 
         if (role == "Admin") {
@@ -145,7 +199,56 @@ function dataDetailTicket(employeeId, TicketId, role) {
     });
 }
 
+function TutupTiket(ticketId) {
+    console.log("Masuk ke tutup Tiket");
 
+
+    let feedbackTicket = new Object();
+    feedbackTicket.Ticket_Id = ticketId;
+    feedbackTicket.Feedback = "(Tiket kami tutup, Terima kasih)";
+    console.log(feedbackTicket);
+
+    //CEK KALO FEEDBACK KOSONG
+    if (feedbackTicket.Feedback != "") {
+        //START OF AJAX FEEDBACK TIKET
+
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "PUT",
+            url: "https://localhost:44376/API/Tickets/customerFeedback",
+            dataType: "json",
+            data: JSON.stringify(feedbackTicket)
+        }).done((result) => {
+            console.log("sukses Memberikan Solusi pada tiket");
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Menutup Tiket',
+            }).then((result) => {
+                window.location.reload();
+            })
+
+        }).fail((error) => {
+            console.log(error);
+
+        });
+
+        //END OF AJAX FEEDBACK TIKET
+    }
+    else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Gagal Menutup Tiket',
+            timer: 2000,
+        })
+    }
+    //END CEK FEEDBACK KOSONG
+
+
+}
 
 function EskalasiTicket(EmployeeId, TicketId, role) {
 
@@ -289,6 +392,7 @@ function KirimSolusi(EmployeeId, TicketId, role) {
     console.log("Object buat Respond Ticket");
     console.log(solutionTicket);
 
+    //KALAU ADMIN DICEK DULU PRIORITY SUDAH DIISI ATAU BELUM
     if (role == "Admin") {
         console.log("masuk admin eskalasi");
         let Priority = new Object();
@@ -311,8 +415,10 @@ function KirimSolusi(EmployeeId, TicketId, role) {
                 dataType: "json",
                 data: JSON.stringify(Priority)
             }).done((result) => {
+
                 console.log("sukses atur priority tiket")
-               
+                //CEK SOLUTION KOSONG ATAU ENGGA
+                if (solutionTicket.Solution !="") {
                     //START OF AJAX RESPOND TIKET
                     $.ajax({
                         headers: {
@@ -337,6 +443,17 @@ function KirimSolusi(EmployeeId, TicketId, role) {
 
                     });
                     //END OF AJAX RESPOND TIKET
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Solusi belum diisi, silahkan dicek kembali',
+                        timer: 2000,
+                    })
+
+                }
+                //END CEK SOLUTION KOSONG ATAU ENGGA                  
 
 
 
@@ -461,7 +578,6 @@ $(document).ready(function () {
         var textTicketTotal = ``;
         textTicketTotal += `<h4 class="mb-0 counter" style=" font-size: 42px;">${resultTicketTotal}</h4>`;
 
-        console.log(textTicketTotal);
 
         $('#keluhanTotal').html(textTicketTotal);
     }).fail((err) => {
@@ -479,7 +595,6 @@ $(document).ready(function () {
         var textCustomerTotal = ``;
         textCustomerTotal += `<h4 class="mb-0 counter" style=" font-size: 42px;">${resultCustomerTotal}</h4>`;
 
-        console.log(textCustomerTotal);
 
         $('#penggunaTotal').html(textCustomerTotal);
     }).fail((err) => {
@@ -497,7 +612,6 @@ $(document).ready(function () {
         var textTicketProcess = ``;
         textTicketProcess += `<h4 class="mb-0 counter" style=" font-size: 42px;">${resultTicketProcess}</h4>`;
 
-        console.log(textTicketProcess);
 
         $('#keluhanDiproses').html(textTicketProcess);
     }).fail((err) => {
@@ -515,7 +629,6 @@ $(document).ready(function () {
         var textTicketClosed = ``;
         textTicketClosed += `<h4 class="mb-0 counter" style=" font-size: 42px;">${resultTicketClosed}</h4>`;
 
-        console.log(textTicketClosed);
 
         $('#keluhanDitutup').html(textTicketClosed);
     }).fail((err) => {
