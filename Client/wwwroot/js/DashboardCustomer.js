@@ -125,6 +125,7 @@ function detailTicket(id, ticketId) {
     let textUrlGetTicket = "https://localhost:44376/API/Tickets/"  + ticketId ;
     console.log(textUrlDetail);
 
+    //GET TICKET HISTORY
     $.ajax({
         type: "GET",
         url: textUrlDetail,
@@ -184,71 +185,97 @@ function detailTicket(id, ticketId) {
 
             }
 
+
+            var currentIndex = 1;
+            var textTicketHistories = ``;
+            var EmployeeOrCustomer;
+
+            //START OF LOOP TICKETHISTORIES
+            //DI REVERSE AGAR STATUS TERBARU JADI DIBAGIAN PERTAMA
+            result.reverse();
+            console.log(result);
+
+            $.each(result, function (key, val) {
+
+                //CEK KALO DITUTUP OLEH CUSTOMER ATAU EMPLOYEE
+                if (result[key].status == "Ditutup") {
+                    if (resultTicket.feedback == "(Tiket kami tutup, Terima kasih)") {
+                        console.log("Masuk ditutup oleh employee");
+                        EmployeeOrCustomer = result[key].employee_position;
+                    }
+                    else {
+                        console.log("Masuk ditutup oleh Customer");
+
+                        EmployeeOrCustomer = "Customer";
+                    }
+
+                }
+                else {
+                    EmployeeOrCustomer = result[key].employee_position;
+                }
+                //END OF CEK KALO DITUTUP OLEH CUSTOMER ATAU EMPLOYEE
+
+                //KALAU INDEX PERTAMA LINGKARAN WARNA HIJAU
+                if (currentIndex == 1) {
+                    if (result[key].employee_position == null) {
+                        textTicketHistories += `<tr>`;
+                        textTicketHistories += `<td>${result[key].date}</td>`;
+                        textTicketHistories += `<td><i class="fa fa-circle" style="color:#16ba0d"></i> </td>`;
+                        textTicketHistories += `<td>${result[key].status}</td>`;
+                        textTicketHistories += `</tr>`;
+                    }
+                    else {
+                        textTicketHistories += `<tr>`;
+                        textTicketHistories += `<td>${result[key].date}</td>`;
+                        textTicketHistories += `<td><i class="fa fa-circle" style="color:#16ba0d"></i> </td>`;
+                        textTicketHistories += `<td>${result[key].status} (${EmployeeOrCustomer})</td>`;
+                        textTicketHistories += `</tr>`;
+                    }
+                }
+                //END OF KALAU INDEX PERTAMA LINGKARAN WARNA HIJAU
+
+                else {
+                    if (result[key].employee_position == null) {
+                        textTicketHistories += `<tr>`;
+                        textTicketHistories += `<td>${result[key].date}</td>`;
+                        textTicketHistories += `<td><i class="fa fa-circle" ></i> </td>`;
+                        textTicketHistories += `<td>${result[key].status} </td>`;
+                        textTicketHistories += `</tr>`;
+                    }
+                    else {
+                        textTicketHistories += `<tr>`;
+                        textTicketHistories += `<td>${result[key].date}</td>`;
+                        textTicketHistories += `<td><i class="fa fa-circle" ></i> </td>`;
+                        textTicketHistories += `<td>${result[key].status} (${EmployeeOrCustomer})</td>`;
+                        textTicketHistories += `</tr>`;
+                    }
+
+                }
+
+
+                currentIndex += 1;
+
+                //console.log(textTicketHistories);
+            });
+            //END OF LOOP TICKETHISTORIES
+
+            $('#customerStatus').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].status + '</h4>');
+            $('#ticketHistoriesTableCustomer').html(textTicketHistories);
+
+
+
+
+
         }).fail((error) => {
             console.log(error);
 
         });
-
-
-
-
-        var currentIndex = 1;
-        var textTicketHistories = ``;
-
-        console.log(result);
-        //START OF LOOP TICKETHISTORIES
-        result.reverse();
-        console.log(result);
-
-        $.each(result, function (key, val) {
-
-            if (currentIndex == 1) {
-                if (result[key].employee_position == null) {
-                    textTicketHistories += `<tr>`;
-                    textTicketHistories += `<td>${result[key].date}</td>`;
-                    textTicketHistories += `<td><i class="fa fa-circle" style="color:#16ba0d"></i> </td>`;
-                    textTicketHistories += `<td>${result[key].status}</td>`;
-                    textTicketHistories += `</tr>`;
-                }
-                else {
-                    textTicketHistories += `<tr>`;
-                    textTicketHistories += `<td>${result[key].date}</td>`;
-                    textTicketHistories += `<td><i class="fa fa-circle" style="color:#16ba0d"></i> </td>`;
-                    textTicketHistories += `<td>${result[key].status} (${result[key].employee_position})</td>`;
-                    textTicketHistories += `</tr>`;
-                }
-            }
-            else {
-                if (result[key].employee_position == null) {
-                    textTicketHistories += `<tr>`;
-                    textTicketHistories += `<td>${result[key].date}</td>`;
-                    textTicketHistories += `<td><i class="fa fa-circle" ></i> </td>`;
-                    textTicketHistories += `<td>${result[key].status} </td>`;
-                    textTicketHistories += `</tr>`;
-                }
-                else {
-                    textTicketHistories += `<tr>`;
-                    textTicketHistories += `<td>${result[key].date}</td>`;
-                    textTicketHistories += `<td><i class="fa fa-circle" ></i> </td>`;
-                    textTicketHistories += `<td>${result[key].status} (${result[key].employee_position})</td>`;
-                    textTicketHistories += `</tr>`;
-                }
-                
-            }
-            
-
-            currentIndex += 1;
-
-            //console.log(textTicketHistories);
-        });
-
-        $('#customerStatus').html('<h4 style="font-weight:bolder; line-height: 35px;">' + result[0].status + '</h4>');
-        //END OF LOOP TICKETHISTORIES
-        $('#ticketHistoriesTableCustomer').html(textTicketHistories);
+        //END OF GET TICKET BY ID       
 
     }).fail((err) => {
         console.log(err);
     });
+    // END OF GET TICKET HISTORY
 
 }
 
