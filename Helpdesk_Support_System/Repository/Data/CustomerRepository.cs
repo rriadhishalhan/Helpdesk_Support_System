@@ -52,9 +52,9 @@ namespace API.Repository.Data
                 Customer cust = new Customer
                 {
                     Id = idFormat,
-                    First_name = registerCustomerVM.first_name,
-                    Last_name = registerCustomerVM.last_name,
-                    Phone_number = registerCustomerVM.phone_number,
+                    First_name = registerCustomerVM.First_Name,
+                    Last_name = registerCustomerVM.Last_Name,
+                    Phone_number = registerCustomerVM.Phone_Number,
                     Email = registerCustomerVM.Email,
                     Password = encryptedPassword,
                 };

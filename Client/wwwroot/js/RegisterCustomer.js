@@ -24,7 +24,10 @@
             icon: 'success',
             title: 'Registrasi Sukses',
             text: "Akun berhasil dibuat"
+        }).then((result) => {
+            window.location.reload();
         })
+
     }).fail(error => {
         console.log(error)
 
