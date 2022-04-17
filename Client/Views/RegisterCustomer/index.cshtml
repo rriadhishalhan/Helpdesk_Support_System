@@ -12,7 +12,7 @@
             <div class="login-card">
                 <div>
                     <div class="login-main" id="cardLogin">
-                        <form class="theme-form">
+                        <form class="theme-form" method="post" id="registerForm">
                             <center>
                                 <h2>Create your account</h2>
                                 <p>Enter your personal details to create account</p>
@@ -23,21 +23,25 @@
                                 <label class="col-form-label pt-0">Your Name</label>
                                 <div class="row g-2">
                                     <div class="col-6">
-                                        <input class="form-control" type="text" required="" placeholder="First name">
+                                        <input class="form-control" type="text" required="" placeholder="First name" name="firstName" id="firstName">
                                     </div>
                                     <div class="col-6">
-                                        <input class="form-control" type="text" required="" placeholder="Last name">
+                                        <input class="form-control" type="text" required="" placeholder="Last name" name="lastName" id="lastName">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label">Email Address</label>
-                                <input class="form-control" type="email" required="" placeholder="Test@gmail.com">
+                                <input class="form-control" type="email" required="" placeholder="Test@gmail.com" name="email" id="email">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Phone Number</label>
+                                <input class="form-control" type="number" required="" placeholder="081234567890" name="phoneNumber" id="phoneNumber">
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label">Password</label>
                                 <div class="form-input position-relative">
-                                    <input class="form-control" type="password" name="login[password]" required="" placeholder="*********">
+                                    <input class="form-control" type="password" name="password" id="password" required="" placeholder="*********">
                                     <div class="show-hide"><span class="show"></span></div>
                                 </div>
                             </div>
