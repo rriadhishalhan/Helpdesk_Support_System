@@ -44,21 +44,12 @@ namespace API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpiredDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("First_name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsUsed")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Last_name")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OTP")
-                        .HasColumnType("int");
 
                     b.Property<string>("Password")
                         .IsRequired()
