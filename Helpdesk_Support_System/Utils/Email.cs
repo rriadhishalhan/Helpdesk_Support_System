@@ -12,10 +12,10 @@ namespace API.Utils
     public class Email
     {
         private readonly MimeMessage mimeMessage;
-        private readonly string _senderName = "Justice Kutch";
-        private readonly string _senderEmail = "justice.kutch78@ethereal.email";
+        private readonly string _senderName = "helpdesk no-reply";
+        private readonly string _senderEmail = "helpdesk.no.reply41@gmail.com";
         private readonly string _senderPassword = "6X2pgyhHz6KDnx9m5J";
-        private readonly string _host = "smtp.ethereal.email";
+        private readonly string _host = "smtp.gmail.com";
         private readonly int _port = 587;
         private readonly SecureSocketOptions _options = SecureSocketOptions.StartTls;
 
