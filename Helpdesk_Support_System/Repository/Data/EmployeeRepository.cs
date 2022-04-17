@@ -154,7 +154,8 @@ namespace API.Repository.Data
                                        Category = ctgs.Name,
                                        Issue = t.Issue,
                                        Solution = t.Solution,
-                                       Feedback = t.Feedback
+                                       Feedback = t.Feedback,
+                                       Status = th.Status,
                                    }).ToList();
             return employeeTickets;
         }
