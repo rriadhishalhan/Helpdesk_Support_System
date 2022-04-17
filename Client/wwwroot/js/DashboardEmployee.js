@@ -404,6 +404,8 @@ function KirimSolusi(EmployeeId, TicketId, role) {
 
         //START OF CHECK PRIOIRTY = NAN
         if (!Number.isNaN(Priority.Priority_Id)) {
+            //LOADER MUNCUL
+            $('#loader').removeClass('hidden')
             //START OF AJAX SET PRIORITY
             $.ajax({
                 headers: {
@@ -430,6 +432,9 @@ function KirimSolusi(EmployeeId, TicketId, role) {
                         dataType: "json",
                         data: JSON.stringify(solutionTicket)
                     }).done((result) => {
+                        //LOADER HIDE
+                        $('#loader').addClass('hidden');
+
                         console.log("sukses Memberikan Solusi pada tiket");
                         Swal.fire({
                             icon: 'success',
@@ -445,6 +450,9 @@ function KirimSolusi(EmployeeId, TicketId, role) {
                     //END OF AJAX RESPOND TIKET
                 }
                 else {
+                    //LOADER HIDE
+                    $('#loader').addClass('hidden');
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -478,8 +486,8 @@ function KirimSolusi(EmployeeId, TicketId, role) {
     }
     else {
         if (solutionTicket.Solution != "") {
-
-         
+                //LOADER MUNCUL
+                $('#loader').removeClass('hidden')
                 //START OF AJAX RESPOND TIKET
                 $.ajax({
                     headers: {
@@ -491,6 +499,9 @@ function KirimSolusi(EmployeeId, TicketId, role) {
                     dataType: "json",
                     data: JSON.stringify(solutionTicket)
                 }).done((result) => {
+                    //LOADER HIDE
+                    $('#loader').addClass('hidden');
+
                     console.log("sukses Memberikan Solusi pada tiket");
                     Swal.fire({
                         icon: 'success',
