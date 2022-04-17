@@ -541,42 +541,62 @@ objSession.Role = $("#hdnSessionRole").data('value');
 console.log(objSession);
 
 
+const colors = {
+    0: '#d18400',
+    1: '#a8910c',
+    2: '#2e47ab',
+    3: '#00960f',
+    4: '#9c9c9c'
+};
+const statusTypes = {
+    0: "Terkirim",
+    1: "Diteruskan",
+    2: "Dibuka",
+    3: "Terjawab",
+    4: "Ditutup"
+};
+
 $(document).ready(function () {
 
+    //GET ALL TICKET FOR THAT EMPLOYEE
+    $("#ticketEmployeeDataTable").DataTable({
+        responsive: true,
+        dom: 'Bfrtip',
+        "ajax": {
+            "url": "https://localhost:44376/api/Employees/" + objSession.Id + "/Tickets/",
+            "dataSrc": "",
+        },
+        "columns": [
+            {
+                "data": null, "sortable": false,
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            { "data": "ticket_Id" },
+            { "data": "category" },
+            { "data": "issue" },
+            {
+                "data": null,
+                render: function (data, type, row) {
+                    var statusBadge = `<span class="badge badge-primary" style="background-color:${colors[data.status]}!important;color:white">${statusTypes[data.status]}</span>`;
 
-    $.ajax({
-        type: "GET",
-        async:false,
-        url: "https://localhost:44376/api/Employees/" + objSession.Id+"/Tickets/",
-        data: {}
-    }).done((result) => {
+                    return statusBadge;
+                }
+            },
+            {
+                "data": null,
+                render: function (data, type, row) {
+                    var btnDetail = `<button data-bs-toggle="modal" data-bs-target="#ModalTicketDetail" onclick="dataDetailTicket('${objSession.Id}','${data.ticket_Id}','${objSession.Role }')" class="btn btn-info"  title="Show Detail"> <i class="fa fa-info" aria-hidden="true"></i></button>`;
 
+                    return btnDetail;
+                }
+            },
 
-
-        var textTicket = ``;
-        if (result.length != 0) {
-            $.each(result, function (key, val) {
-                textTicket += `<tr data-bs-toggle="modal" data-bs-target="#ModalTicketDetail" onclick="dataDetailTicket('${objSession.Id }','${result[key].ticket_Id}','${objSession.Role }')">`;
-                textTicket += `<th scope="row">${key + 1}</th>`;
-                textTicket += `<td>${result[key].ticket_Id}</td>`;
-                textTicket += `<td>${result[key].category}</td>`;
-                textTicket += `<td>${result[key].issue}</td>`;
-                textTicket += `</tr>`;
-                //console.log(textTicket);
-            });
-        } else {
-            textTicket += `<tr>`;
-            textTicket += `<td colspan= "4"> Belum ada tiket </td>`;
-            textTicket += `</tr>`;
-
-            console.log(textTicket);
-
-        }
-        
-        $('#ticketTableEmployee').html(textTicket);
-    }).fail((err) => {
-        console.log(err);
+        ],
     });
+    //END GET ALL TICKET FOR THAT EMPLOYEE
+
 
     //GET COUNT TOTAL KELUHAN
     $.ajax({
